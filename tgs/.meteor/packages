@@ -7,3 +7,7 @@ autopublish
 insecure
 preserve-inputs
 coffeescript
+d3
+jquery
+underscore
+less
