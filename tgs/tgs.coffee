@@ -1,8 +1,10 @@
-Texts = new Meteor.Collection("texts")
+Games = new Meteor.Collection("game")
+Games.remove({})
+Games.insert(default_game)
 
 if Meteor.isClient
-  Template.text_list.texts = () ->
-    Texts.find({}, {sort: {val: 1}})
+  Template.game.points = Games.findOne().board.points
+  Template.game.edges  = Games.findOne().board.edges
 
   Template.hello.greeting = () ->
     "Welcome to tgs."

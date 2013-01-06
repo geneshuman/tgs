@@ -6,7 +6,9 @@
   {{> hello}}
 	<br/>
 	<br/>
-	{{> text_list}}
+	<div>
+		{{> game}}
+	</div>
 </body>
 
 <template name="hello">
@@ -16,15 +18,30 @@
 </template>
 
 
-<template name="text_list">
-	{{#each texts}}
-	{{> text}}
-	{{else}}
-	No texts yet
-	{{/each}}
+<template name="game">
+	points<br/>
+	<div id="points">
+		{{#each points}}
+		{{> point}}
+		<br/>
+		{{/each}}
+	</div>
+	<br/>
+	edges<br/>
+	<div id="edges">
+		{{#each edges}}
+		{{> edge}}
+		<br/>
+		{{/each}}
+	</div>
 </template>
 
-<template name="text">
-	{{val}}
-	<br/>
+<template name="point">
+	{{point_id}}
+	{{pos}}
+</template>
+
+<template name="edge">
+	{{edge_id}}
+	{{connection}}
 </template>
