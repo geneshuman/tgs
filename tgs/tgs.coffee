@@ -1,4 +1,9 @@
+Texts = new Meteor.Collection("texts")
+
 if Meteor.isClient
+  Template.text_list.texts = () ->
+    Texts.find({}, {sort: {val: 1}})
+
   Template.hello.greeting = () ->
     "Welcome to tgs."
 
