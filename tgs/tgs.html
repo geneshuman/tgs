@@ -4,9 +4,15 @@
 
 <body>
   <div>
-    {{> game}}
+    {{> data}}
   </div>
 </body>
+
+<template name="data">
+  {{#with game}}
+  {{> game}}
+  {{/with}}
+</template>
 
 <template name="game">
   {{name}}
