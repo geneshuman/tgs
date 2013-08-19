@@ -1,14 +1,11 @@
 $.Games = new Meteor.Collection("game")
 
-game_observer = null
-
-Meteor.startup () ->  
+Meteor.startup () ->
+  
   # temporary
   $.Games.find().observeChanges {added: (id, fields) ->
     game = $.Games.find({_id: id})
     Session.set("current_game", game.fetch()[0])
-#    
-#    alert(2)
   }
 
   Deps.autorun () ->
@@ -19,16 +16,6 @@ Meteor.startup () ->
 
     $.initScene(game)
 
-    if game_observer
-      game_observer.stop()
-  
-    game_observer = $.Games.find({_id: game._id}).observeChanges {changed: (id, fields) ->
-      alert(1)
+    $.Games.find().observeChanges {changed: (id, fields) ->
       $.drawLastStone()
     }
-
-
-#    $.Games.find().observeChanges {added: (id, fields) ->
-#      $.initScene($.Games.find({_id: id}).fetch()[0])
-#    }
-

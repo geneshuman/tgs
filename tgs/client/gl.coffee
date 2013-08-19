@@ -1,19 +1,19 @@
 # initialization
 window.onload = () ->
   container = $('#3D')
-  WIDTH = container.width()
-  HEIGHT = container.height()
+  $.WIDTH = container.width()
+  $.HEIGHT = container.height()
 
   # create renderer
   $.renderer = new THREE.WebGLRenderer()
-  $.renderer.setSize(WIDTH, HEIGHT)
+  $.renderer.setSize($.WIDTH, $.HEIGHT)
   container.append($.renderer.domElement)
 
   # initialize scene
   $.scene = new THREE.Scene()
 
   # create camera
-  $.camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 20)
+  $.camera = new THREE.PerspectiveCamera(45, $.WIDTH / $.HEIGHT, 0.1, 20)
   $.camera.position.z = 5
   $.scene.add($.camera)
 
@@ -50,7 +50,7 @@ $.animate = () ->
 
 # draph initial graph
 $.initScene = (game) ->
-  window.game = game
+  $.game = game
   
   $.graph = new THREE.Object3D();
   $.scene.add($.graph);
@@ -104,7 +104,7 @@ getSphere = (size, x, y, z, material) ->
 onDocumentMouseDown = (event) ->
   event.preventDefault();
 
-  vector = new THREE.Vector3( ( event.clientX / 400 ) * 2 - 1, - ( event.clientY / 400 ) * 2 + 1, 0.5 )
+  vector = new THREE.Vector3( ( event.clientX / $.WIDTH ) * 2 - 1, - ( event.clientY / $.HEIGHT ) * 2 + 1, 0.5 )
   $.projector.unprojectVector( vector, $.camera )
 
   raycaster = new THREE.Raycaster( $.camera.position, vector.sub( $.camera.position ).normalize() )
@@ -116,7 +116,8 @@ onDocumentMouseDown = (event) ->
   intersects = raycaster.intersectObjects(tmp)
 
   if intersects.length > 0
-    intersects[ 0 ].object.material.color.setHex( Math.random() * 0xffffff )
+    point_id = [pt[1].point_id for pt in $.points when pt[0] == intersects[0].object][0][0]
+    share.playStone($.game, point_id)
 
 
 # add a black stone
@@ -129,3 +130,14 @@ addBlackStone = (size, x, y, z) ->
 addWhiteStone = (size, x, y, z) ->
   material = new THREE.MeshLambertMaterial({color: 0xFFFFFF})
   $.graph.add(getSphere(size, x, y, z, material))
+
+
+# draw last stone
+$.drawLastStone = () ->
+  id = $.game.moves[$.game.moves.length - 1]
+  pos = [pt.pos for pt in $.game.board.points when pt.point_id == id][0][0]
+
+  if $.game.moves.length % 2 == 1
+    addBlackStone($.game.board.stone_radius, pos[0], pos[1], pos[2])
+  else
+    addWhiteStone($.game.board.stone_radius, pos[0], pos[1], pos[2])
