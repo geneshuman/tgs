@@ -3,3 +3,4 @@
 *#*
 *.log
 .meteor/local
+.DS_Store

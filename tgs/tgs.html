@@ -3,10 +3,14 @@
 </head>
 
 <body>
-  <div>
-    {{> data}}
-  </div>
+  {{> game}}
 </body>
+
+<template name="game">
+  {{#constant}}
+  <div id="3D" style="width:400px;height:300px;"></div>
+  {{/constant}}
+</game>
 
 <template name="data">
   {{#with game}}
@@ -14,8 +18,7 @@
   {{/with}}
 </template>
 
-<template name="game">
-  {{name}}
+<template name="game_old">
   points<br/>
   <div id="points">
     {{#each points}}
