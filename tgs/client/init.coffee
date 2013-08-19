@@ -1,6 +1,6 @@
 window.onload = () ->
   WIDTH = 400
-  HEIGHT = 300
+  HEIGHT = 400
 
   VIEW_ANGLE = 45
   ASPECT = WIDTH / HEIGHT
@@ -17,7 +17,7 @@ window.onload = () ->
 
   # create camera
   $.camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR)
-  $.camera.position.z = 300
+  $.camera.position.z = 2
 
   $.scene.add($.camera)
 
@@ -34,22 +34,30 @@ window.onload = () ->
 
 
 $.initScene = (game) ->
-  alert(game)
-  radius = 50
-  segments = 16
-  rings = 16
+  window.game = game
+  for point in game.board.points
+    pos = point.pos
+    drawPoint(game.board.stone_radius, pos[0], pos[1], pos[2])
 
-  sphereMaterial = new THREE.MeshLambertMaterial(
+
+drawPoint = (size, x, y, z) ->
+  material = new THREE.MeshLambertMaterial(
     {
       color: 0xCC0000
     })
+  drawSphere(size, x, y, z, material)
 
+
+drawSphere = (size, x, y, z, material) ->
+  radius = size
+  segments = 16
+  rings = 16
   sphere = new THREE.Mesh(
     new THREE.SphereGeometry(
-      radius,
+      size,
       segments,
       rings),
-    sphereMaterial)
+    material)
 
   $.scene.add(sphere);
 

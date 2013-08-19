@@ -18,8 +18,7 @@ $.Games = new Meteor.Collection("game")
 Meteor.startup () ->
   Deps.autorun () ->
     $.Games.find().observeChanges {added: (id, fields) ->
-      console.log "added game"
-      $.initScene($.Games.find({_id: id}))
+      $.initScene($.Games.find({_id: id}).fetch()[0])
     }
 
  #     Session.set("current_game", Games.findOne({})._id)
