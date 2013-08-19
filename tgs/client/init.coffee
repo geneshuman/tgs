@@ -5,7 +5,7 @@ window.onload = () ->
   VIEW_ANGLE = 45
   ASPECT = WIDTH / HEIGHT
   NEAR = 0.1
-  FAR = 10000
+  FAR = 10
 
   # create renderer
   $.renderer = new THREE.WebGLRenderer({ antialiasing: true })
@@ -17,7 +17,7 @@ window.onload = () ->
 
   # create camera
   $.camera = new THREE.PerspectiveCamera(VIEW_ANGLE, ASPECT, NEAR, FAR)
-  $.camera.position.z = 2
+  $.camera.position.z = 5
 
   $.scene.add($.camera)
 
@@ -32,23 +32,61 @@ window.onload = () ->
 
   $.renderer.render($.scene, $.camera)
 
+  $.controls = new THREE.TrackballControls($.camera);
+  $.controls.rotateSpeed = 1.0;
+  $.controls.zoomSpeed = 1.2;
+  $.controls.panSpeed = 0.8;
+  $.controls.noZoom = false;
+  $.controls.noPan = false;
+  $.controls.staticMoving = true;
+  $.controls.dynamicDampingFactor = 0.3;
+#  $.controls.addEventListener( 'change', $.render );
+  $.animate()
+
+
+$.animate = () ->
+#  alert($.controls)
+  requestAnimationFrame($.animate)
+  $.render()
+  if $.controls
+  	$.controls.update()
+
+
+$.render = () ->
+  $.renderer.render($.scene, $.camera)
 
 $.initScene = (game) ->
   window.game = game
+  
+  $.graph = new THREE.Object3D();
+  $.graph.rotation.set(0.1,0.2,0.3)
+  $.scene.add($.graph);
+
   for point in game.board.points
-    pos = point.pos
-    drawPoint(game.board.stone_radius, pos[0], pos[1], pos[2])
+    point = getPoint(game.board.stone_radius, point.pos[0], point.pos[1], point.pos[2])
+    $.graph.add(point)
+
+  material = new THREE.MeshLambertMaterial({color: 0x444444})
+  for edge in game.board.edges
+    p0 = (p.pos for p in game.board.points when p.point_id == edge.connection[0])[0]
+    p1 = (p.pos for p in game.board.points when p.point_id == edge.connection[1])[0]
+  
+    geometry = new THREE.Geometry()
+    geometry.vertices.push( new THREE.Vector3(p0[0], p0[1], p0[2]) );
+    geometry.vertices.push( new THREE.Vector3(p1[0], p1[1], p1[2]) );
+
+    edge = new THREE.Line(geometry ,material, THREE.LineStrip)
+    $.graph.add(edge)
+
+  $.renderer.render($.scene, $.camera)
 
 
-drawPoint = (size, x, y, z) ->
-  material = new THREE.MeshLambertMaterial(
-    {
-      color: 0xCC0000
-    })
-  drawSphere(size, x, y, z, material)
+getPoint = (size, x, y, z) ->
+  material = new THREE.MeshLambertMaterial({color: 0xCC0000})
+  getSphere(size, x, y, z, material)
 
 
-drawSphere = (size, x, y, z, material) ->
+getSphere = (size, x, y, z, material) ->
   radius = size
   segments = 16
   rings = 16
@@ -59,6 +97,8 @@ drawSphere = (size, x, y, z, material) ->
       rings),
     material)
 
-  $.scene.add(sphere);
+  sphere.position.x = x
+  sphere.position.y = y
+  sphere.position.z = z
 
-  $.renderer.render($.scene, $.camera)
+  sphere
