@@ -1,6 +1,6 @@
 {
   "name": "2x2x2",
-  "stone_radius": 0.2,
+  "stone_radius": 0.25,
   "scale": {
     "lll": [-1,-1,-1],
     "uuu": [1,1,1]

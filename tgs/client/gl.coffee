@@ -1,6 +1,6 @@
 # initialization
 window.onload = () ->
-  container = $('#3D')
+  container = $('#container')
   $.WIDTH = container.width()
   $.HEIGHT = container.height()
 
@@ -17,11 +17,23 @@ window.onload = () ->
   $.camera.position.z = 5
   $.scene.add($.camera)
 
-  # add light
-  pointLight = new THREE.PointLight(0xFFFFFF)
+  # add lights
+  pointLight = new THREE.PointLight(0xCCFFFF)
   pointLight.position.x = 5
-  pointLight.position.y = 25
-  pointLight.position.z = 70
+  pointLight.position.y = 20
+  pointLight.position.z = 15
+  $.scene.add(pointLight)
+
+  pointLight = new THREE.PointLight(0xFFCCFF)
+  pointLight.position.x = -5
+  pointLight.position.y = -20
+  pointLight.position.z = -15
+  $.scene.add(pointLight)
+
+  pointLight = new THREE.PointLight(0xFFFFCC)
+  pointLight.position.x = 5
+  pointLight.position.y = -20
+  pointLight.position.z = 15
   $.scene.add(pointLight)
 
   # init controls
@@ -33,19 +45,41 @@ window.onload = () ->
   $.controls.noPan = false;
   $.controls.staticMoving = true;
   $.controls.dynamicDampingFactor = 0.3;
-  $.animate()
 
   # for checking mouse clicks
   $.projector = new THREE.Projector();
   $.points = []
   document.addEventListener('mousedown', onDocumentMouseDown, false)
 
+  # antialiasing
+  # dpr = 1;
+  # if (window.devicePixelRatio != undefined)
+  #   dpr = window.devicePixelRatio;
+
+  # renderScene = new THREE.RenderPass($.scene, $.camera);
+  # effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
+  # effectFXAA.uniforms['resolution'].value.set(1 / ($.WIDTH * dpr), 1 / ($.HEIGHT * dpr));
+  # effectFXAA.renderToScreen = true;
+
+  # $.composer = new THREE.EffectComposer($.renderer);
+  # $.composer.setSize($.WIDTH * dpr, $.HEIGHT * dpr);
+  # $.composer.addPass(renderScene);
+  # $.composer.addPass(effectFXAA);
+  # $.composer.render()
+
+  # start
+  $.animate()
 
 # rendering loop <- probably overkill
 $.animate = () ->
   requestAnimationFrame($.animate)
   $.renderer.render($.scene, $.camera)
   $.controls.update()
+
+#  $.renderer.clear()
+#  if $.composer
+#    alert(1)
+#    $.composer.render()
 
 
 # draph initial graph
@@ -62,7 +96,7 @@ $.initScene = (game) ->
     $.points.push([pt, point])
 
   # draw edges
-  material = new THREE.LineBasicMaterial({color: 0x000000})
+  material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 3})
   for edge in game.board.edges
     p0 = (p.pos for p in game.board.points when p.point_id == edge.connection[0])[0]
     p1 = (p.pos for p in game.board.points when p.point_id == edge.connection[1])[0]
@@ -77,7 +111,7 @@ $.initScene = (game) ->
 
 # return a point
 getPoint = (size, x, y, z) ->
-  material = new THREE.MeshLambertMaterial({color: 0xCC0000})
+  material = new THREE.MeshPhongMaterial({specular: 0xAA2211, color: 0x991122, emissive: 0x661111, shininess: 40})
   getSphere(size, x, y, z, material)
 
 
@@ -122,13 +156,13 @@ onDocumentMouseDown = (event) ->
 
 # add a black stone
 addBlackStone = (size, x, y, z) ->
-  material = new THREE.MeshLambertMaterial({color: 0x000000})
+  material = new THREE.MeshPhongMaterial({specular: 0x666666, color: 0x333333, emissive: 0x000000, shininess: 20})
   $.graph.add(getSphere(size, x, y, z, material))
 
 
 # add a white stone
 addWhiteStone = (size, x, y, z) ->
-  material = new THREE.MeshLambertMaterial({color: 0xFFFFFF})
+  material = new THREE.MeshPhongMaterial({specular: 0xFFFFFF, color: 0xBBBBBB, emissive: 0x444444, shininess: 40})
   $.graph.add(getSphere(size, x, y, z, material))
 
 
