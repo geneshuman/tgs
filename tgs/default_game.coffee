@@ -1,7 +1,7 @@
 default_board = {
   name: 'default',
   # automatically compute this eventually
-  stone_radius: 0.1,
+  stone_radius: 0.2,
   scale: {
     lll: [-1,-1,-1],
     uuu: [1,1,1]
