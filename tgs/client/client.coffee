@@ -1,27 +1,20 @@
 $.Games = new Meteor.Collection("game")
-  # Template.data.game = () ->
-  #   return Games.findOne({})
-
-  # Template.game.points = () ->
-  #   return Template.data.game().board.points
-
-  # Template.game.edges = () ->
-  #   return Template.data.game().board.edges
-
-  # Template.getGame = () ->
-  #   return Games.findOne({})
-# 
-#Template.game.rendered = () ->
-#  $.initScene(Games.findOne({}))
-
-
 Meteor.startup () ->
+  
+  # temporary
+  $.Games.find().observeChanges {added: (id, fields) ->
+    game = $.Games.find({_id: id})
+#    Session.set("current_game", game)
+    $.initScene(game.fetch()[0])
+  }
+
   Deps.autorun () ->
-    $.Games.find().observeChanges {added: (id, fields) ->
-      $.initScene($.Games.find({_id: id}).fetch()[0])
-    }
+    game = Session.get("current_game")
+    if game
+      $.initScene(game.fetch()[0])
+  
 
- #     Session.set("current_game", Games.findOne({})._id)
+#    $.Games.find().observeChanges {added: (id, fields) ->
+#      $.initScene($.Games.find({_id: id}).fetch()[0])
+#    }
 
-
-#Meteor.subscripe("currentGame")
