@@ -33,7 +33,7 @@ window.onload = () ->
   $.controls.noPan = false;
   $.controls.staticMoving = true;
   $.controls.dynamicDampingFactor = 0.3;
-#  $.animate()
+  $.animate()
 
   # for checking mouse clicks
   $.projector = new THREE.Projector();
@@ -73,8 +73,7 @@ $.initScene = (game) ->
 
     edge = new THREE.Line(geometry, material)
     $.graph.add(edge)
-
-  $.renderer.render($.scene, $.camera)  
+  
 
 # return a point
 getPoint = (size, x, y, z) ->
