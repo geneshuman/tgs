@@ -3,10 +3,14 @@
 #
 
 
-share.playStone = (game, point_id) ->
-  console.log game
-  game.stones.push(point_id)
+share.playStone = (game, point_id) ->  
+  stone = {
+    point_id: point_id,
+    player: game.current_turn,
+    captured: false
+  }
+  game.stones.push(stone)
   #$.Games.update(game._id, {$push: {moves: point_id}})
-  $.Games.update(game._id, {stones:game.stones})
-  console.log $.Games.findOne()
+  $.Games.update(game._id, {$set: {stones: game.stones}})
+  #console.log $.Games.findOne()
   

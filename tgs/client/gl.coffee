@@ -51,6 +51,8 @@ window.onload = () ->
   $.points = []
   document.addEventListener('mousedown', onDocumentMouseDown, false)
 
+  $.active_stones = []
+
   # antialiasing
   # dpr = 1;
   # if (window.devicePixelRatio != undefined)
@@ -91,7 +93,6 @@ $.initScene = (game) ->
 
   # draw dots
   for point in game.board.points
-    alert(game.board.stone_radius)
     pt = getPoint(0.7 * game.board.stone_radius, point.pos[0], point.pos[1], point.pos[2])
     $.graph.add(pt)
     $.points.push([pt, point])
@@ -108,6 +109,9 @@ $.initScene = (game) ->
 
     edge = new THREE.Line(geometry, material)
     $.graph.add(edge)
+
+  # draw existing stones
+  $.updateStones()
   
 
 # return a point
@@ -168,11 +172,14 @@ addWhiteStone = (size, x, y, z) ->
 
 
 # draw last stone
-$.drawLastStone = () ->
-  id = $.game.stones[$.game.stones.length - 1]
-  pos = [pt.pos for pt in $.game.board.points when pt.point_id == id][0][0]
-
-  if $.game.stones.length % 2 == 1
-    addBlackStone($.game.board.stone_radius, pos[0], pos[1], pos[2])
-  else
-    addWhiteStone($.game.board.stone_radius, pos[0], pos[1], pos[2])
+$.updateStones = () ->
+  for stone in $.game.stones
+    if $.inArray(stone, $.active_stones) != -1
+      continue
+    $.active_stones.push(stone)
+    id = stone.point_id
+    pos = [pt.pos for pt in $.game.board.points when pt.point_id == id][0][0]
+    if $.game.stones.length % 2 == 1
+      addBlackStone($.game.board.stone_radius, pos[0], pos[1], pos[2])
+    else
+      addWhiteStone($.game.board.stone_radius, pos[0], pos[1], pos[2])
