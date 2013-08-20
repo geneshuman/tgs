@@ -10,7 +10,12 @@ share.playStone = (game, point_id) ->
     captured: false
   }
   game.stones.push(stone)
-  #$.Games.update(game._id, {$push: {moves: point_id}})
-  $.Games.update(game._id, {$set: {stones: game.stones}})
-  #console.log $.Games.findOne()
+
+  if game.current_turn == 'black'
+    next_turn = 'white'
+  else
+    next_turn = 'black'
+
+  $.Games.update(game._id, {$set: {stones: game.stones, current_turn: next_turn}})
+  $.game = $.Games.findOne() # i don't like this
   

@@ -179,7 +179,7 @@ $.updateStones = () ->
     $.active_stones.push(stone)
     id = stone.point_id
     pos = [pt.pos for pt in $.game.board.points when pt.point_id == id][0][0]
-    if $.game.stones.length % 2 == 1
+    if stone.player == 'black'
       addBlackStone($.game.board.stone_radius, pos[0], pos[1], pos[2])
     else
       addWhiteStone($.game.board.stone_radius, pos[0], pos[1], pos[2])

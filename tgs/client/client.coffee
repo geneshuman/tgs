@@ -19,8 +19,16 @@ newGame = () ->
   id = $.Games.insert(game)
   Session.set("current_game", $.Games.find({_id: id}).fetch()[0])
 
+
 joinGame = (event) ->
-  game = $.Games.find({_id: event.currentTarget.id}).fetch()[0]
+  id = event.currentTarget.id
+  game = $.Games.find({_id: id}).fetch()[0]
+  players = game.players
+  if !players.black
+    players.black = Meteor.user()._id
+  else
+    players.white = Meteor.user()._id
+  $.Games.update({_id: id}, {$set: {players: players}})
   Session.set("current_game", game)
   
 
