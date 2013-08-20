@@ -1,5 +1,7 @@
 Games = new Meteor.Collection("game")
 
+share.boardTypes = [{name:"2x2x2"}]
+
 Meteor.startup () ->
   if(Games.find().count() == 0 or true)
 
@@ -12,4 +14,4 @@ Meteor.startup () ->
     }
 
     Games.remove({})
-    Games.insert(game)
+#    Games.insert(game)

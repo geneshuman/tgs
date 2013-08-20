@@ -1,6 +1,15 @@
 $.Games = new Meteor.Collection("game")
 
 Meteor.startup () ->
+
+  Template.console.games = () ->    
+    $.Games.find()
+
+  Template.console.boardTypes = () ->
+    alert(share.boardTypes)
+
+  Template.console.currentGame = () ->
+    Session.get("current_game")
   
   # temporary
   $.Games.find().observeChanges {added: (id, fields) ->

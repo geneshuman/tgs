@@ -96,7 +96,7 @@ $.initScene = (game) ->
     $.points.push([pt, point])
 
   # draw edges
-  material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 3})
+  material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 2})
   for edge in game.board.edges
     p0 = (p.pos for p in game.board.points when p.point_id == edge.connection[0])[0]
     p1 = (p.pos for p in game.board.points when p.point_id == edge.connection[1])[0]
@@ -111,7 +111,7 @@ $.initScene = (game) ->
 
 # return a point
 getPoint = (size, x, y, z) ->
-  material = new THREE.MeshPhongMaterial({specular: 0xAA2211, color: 0x991122, emissive: 0x661111, shininess: 40})
+  material = new THREE.MeshPhongMaterial({specular: 0xAA1111, color: 0x991111, emissive: 0x661111, shininess: 30})
   getSphere(size, x, y, z, material)
 
 

@@ -4,6 +4,7 @@
 
 <body>
   {{> game}}
+  {{> console}}
 </body>
 
 <template name="game">
@@ -12,3 +13,33 @@
   {{/constant}}
 </template>
 
+<template name="console">
+  <div id="console">
+    <h2>TGS</h2>
+    {{#unless currentGame}}
+    <h3>Active Games</h3></br>
+    {{#unless games}}
+    No Active Games<br/>
+    {{/unless}}
+    {{# each games}}
+    
+    {{/each}}
+    <button id="showNewGameButton" onclick="$(this).hide();$('#newGameDialog').show();">New Game</button>
+    <div id="newGameDialog" style="display:none;">
+      Board:
+      <select id="selectBoard">
+	{{# each boardTypes}}
+	{{> boardType}}
+	{{/each}}
+      </select>
+      <br/>
+      <button id="newGameButton">Go!</button>
+    </div>
+    {{/unless}}
+  </div>
+</template>
+
+
+<template name="boardType">
+<option value="{{name}}">{{name}}</option>
+</template>
