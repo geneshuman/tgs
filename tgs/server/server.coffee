@@ -1,17 +1,12 @@
 Games = new Meteor.Collection("game")
 
-share.boardTypes = [{name:"2x2x2"}]
+BoardTypes = new Meteor.Collection("boardTypes")
 
-Meteor.startup () ->
-  if(Games.find().count() == 0 or true)
+Meteor.startup () ->  
+  # load boards from server
+  BoardTypes.remove({})
+  types = ["2x2x2"]
 
-    board = JSON.parse(Assets.getText("2x2x2.json"))
-    game = {
-      name: 'shiz2',
-      players: [],
-      moves: [],
-      board: board
-    }
-
-    Games.remove({})
-#    Games.insert(game)
+  for board in types
+    data = JSON.parse(Assets.getText(board + ".json"))
+    BoardTypes.insert({name: board, data:data})

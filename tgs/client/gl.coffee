@@ -168,10 +168,10 @@ addWhiteStone = (size, x, y, z) ->
 
 # draw last stone
 $.drawLastStone = () ->
-  id = $.game.moves[$.game.moves.length - 1]
+  id = $.game.stones[$.game.stones.length - 1]
   pos = [pt.pos for pt in $.game.board.points when pt.point_id == id][0][0]
 
-  if $.game.moves.length % 2 == 1
+  if $.game.stones.length % 2 == 1
     addBlackStone($.game.board.stone_radius, pos[0], pos[1], pos[2])
   else
     addWhiteStone($.game.board.stone_radius, pos[0], pos[1], pos[2])

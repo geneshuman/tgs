@@ -1,22 +1,34 @@
 $.Games = new Meteor.Collection("game")
+$.BoardTypes = new Meteor.Collection("boardTypes")
 
-Meteor.startup () ->
+newGame = () ->
+  name = $('#selectBoard').val()
+  board = $.BoardTypes.find({name: name}).fetch()[0].data
 
-  Template.console.games = () ->    
-    $.Games.find()
-
-  Template.console.boardTypes = () ->
-    alert(share.boardTypes)
-
-  Template.console.currentGame = () ->
-    Session.get("current_game")
-  
-  # temporary
-  $.Games.find().observeChanges {added: (id, fields) ->
-    game = $.Games.find({_id: id})
-    Session.set("current_game", game.fetch()[0])
+  game = {
+    name: name,
+    players: [],
+    stones: [],
+    board: board
   }
+  $.Games.insert(game)
+  Session.set("current_game", game)
 
+Template.console.games = () ->    
+  $.Games.find()
+
+Template.console.boardTypes = () ->
+  $.BoardTypes.find()
+  
+Template.console.currentGame = () ->
+  Session.get("current_game")
+
+Template.console.events {
+  'click #newGameButton': newGame
+}
+
+
+Meteor.startup () ->  
   Deps.autorun () ->
     game = Session.get("current_game")
 
@@ -25,6 +37,9 @@ Meteor.startup () ->
 
     $.initScene(game)
 
-    $.Games.find().observeChanges {changed: (id, fields) ->
+    $.Games.find({_id: game._id}).observeChanges {changed: (id, fields) ->
+      alert(1)
       $.drawLastStone()
     }
+
+
