@@ -1,19 +1,21 @@
 $.Games = new Meteor.Collection("game")
 $.BoardTypes = new Meteor.Collection("boardTypes")
 
+# function to create a new game
 newGame = () ->
   name = $('#selectBoard').val()
   board = $.BoardTypes.find({name: name}).fetch()[0].data
 
   game = {
-    name: name,
-    players: [],
+    boardType: name,
+    players: {},
     stones: [],
     board: board
   }
-  $.Games.insert(game)
-  Session.set("current_game", game)
+  id = $.Games.insert(game)
+  Session.set("current_game", $.Games.find({_id: id}).fetch()[0])
 
+# Templates
 Template.console.games = () ->    
   $.Games.find()
 
@@ -27,7 +29,12 @@ Template.console.events {
   'click #newGameButton': newGame
 }
 
+Template.console.helpers {
+  anyGames: () ->
+    $.Games.find().fetch().length != 0
+}
 
+# startup
 Meteor.startup () ->  
   Deps.autorun () ->
     game = Session.get("current_game")
@@ -36,10 +43,14 @@ Meteor.startup () ->
       return
 
     $.initScene(game)
-
     $.Games.find({_id: game._id}).observeChanges {changed: (id, fields) ->
-      alert(1)
       $.drawLastStone()
     }
 
-
+# account config
+Accounts.config({
+  sendVerificationEmail: true
+})
+Accounts.ui.config({
+  passwordSignupFields: 'USERNAME_AND_EMAIL'
+})

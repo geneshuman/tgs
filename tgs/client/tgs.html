@@ -16,14 +16,23 @@
 <template name="console">
   <div id="console">
     <h2>TGS</h2>
+
+    {{#unless currentUser}}
+    {{loginButtons}}
+    {{/unless}}
+
     {{#unless currentGame}}
     <h3>Active Games</h3></br>
-    {{#unless games}}
-    No Active Games<br/>
+
+    {{#unless anyGames}}
+    No Active Games<br/><br/>
     {{/unless}}
+
     {{# each games}}
-    
+    {{> gameSummary}}
     {{/each}}
+
+    {{#if currentUser}}
     <button id="showNewGameButton" onclick="$(this).hide();$('#newGameDialog').show();">New Game</button>
     <div id="newGameDialog" style="display:none;">
       Board:
@@ -35,12 +44,18 @@
       <br/>
       <button id="newGameButton">Go!</button>
     </div>
+    {{/if}}
     {{/unless}}
   </div>
 </template>
 
-
 <template name="boardType">
-aaaa
-<option value="{{name}}">{{name}}</option>
+  <option value="{{name}}">{{name}}</option>
+</template>
+
+<template name="gameSummary">
+<a class="joinGame" href="javascript:void()" id="{{_id}}">
+  {{boardType}}
+</a>
+<br/>
 </template>

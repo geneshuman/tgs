@@ -91,6 +91,7 @@ $.initScene = (game) ->
 
   # draw dots
   for point in game.board.points
+    alert(game.board.stone_radius)
     pt = getPoint(0.7 * game.board.stone_radius, point.pos[0], point.pos[1], point.pos[2])
     $.graph.add(pt)
     $.points.push([pt, point])
@@ -111,7 +112,7 @@ $.initScene = (game) ->
 
 # return a point
 getPoint = (size, x, y, z) ->
-  material = new THREE.MeshPhongMaterial({specular: 0xAA1111, color: 0x991111, emissive: 0x661111, shininess: 30})
+  material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: 0x990000, emissive: 0x660000, shininess: 30})
   getSphere(size, x, y, z, material)
 
 
