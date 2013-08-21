@@ -86,7 +86,6 @@ $.animate = () ->
 
 # draph initial graph
 $.initScene = (game) ->
-  $.game = game
   
   $.graph = new THREE.Object3D();
   $.scene.add($.graph);
@@ -156,7 +155,7 @@ onDocumentMouseDown = (event) ->
 
   if intersects.length > 0
     point_id = [pt[1].point_id for pt in $.points when pt[0] == intersects[0].object][0][0]
-    share.playStone($.game, point_id)
+    share.playStone($.currentGame(), point_id)
 
 
 # add a black stone
@@ -173,13 +172,14 @@ addWhiteStone = (size, x, y, z) ->
 
 # draw last stone
 $.updateStones = () ->
-  for stone in $.game.stones
+  game = $.currentGame()
+  for stone in game.stones
     if $.inArray(stone, $.active_stones) != -1
       continue
     $.active_stones.push(stone)
     id = stone.point_id
-    pos = [pt.pos for pt in $.game.board.points when pt.point_id == id][0][0]
+    pos = [pt.pos for pt in game.board.points when pt.point_id == id][0][0]
     if stone.player == 'black'
-      addBlackStone($.game.board.stone_radius, pos[0], pos[1], pos[2])
+      addBlackStone(game.board.stone_radius, pos[0], pos[1], pos[2])
     else
-      addWhiteStone($.game.board.stone_radius, pos[0], pos[1], pos[2])
+      addWhiteStone(game.board.stone_radius, pos[0], pos[1], pos[2])

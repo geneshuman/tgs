@@ -1,6 +1,13 @@
 $.Games = new Meteor.Collection("game")
 $.BoardTypes = new Meteor.Collection("boardTypes")
 
+# current game
+$.currentGame = () ->
+  id = Session.get("current_game_id")
+  if not id
+    return null
+  $.Games.find({_id: id}).fetch()[0]
+
 # function to create a new game
 newGame = () ->
   name = $('#selectBoard').val()
@@ -17,7 +24,7 @@ newGame = () ->
     board: board
   }
   id = $.Games.insert(game)
-  Session.set("current_game", $.Games.find({_id: id}).fetch()[0])
+  Session.set("current_game_id", id)
 
 
 joinGame = (event) ->
@@ -29,7 +36,7 @@ joinGame = (event) ->
   else
     players.white = Meteor.user()._id
   $.Games.update({_id: id}, {$set: {players: players}})
-  Session.set("current_game", game)
+  Session.set("current_game_id", game._id)
   
 
 # Templates
@@ -40,7 +47,7 @@ Template.console.boardTypes = () ->
   $.BoardTypes.find()
   
 Template.console.currentGame = () ->
-  Session.get("current_game")
+  $.currentGame()
 
 Template.console.events {
   'click #newGameButton': newGame,
@@ -55,8 +62,7 @@ Template.console.helpers {
 # startup
 Meteor.startup () ->  
   Deps.autorun () ->
-    game = Session.get("current_game")
-
+    game = $.currentGame()
     if not game
       return
 

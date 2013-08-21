@@ -17,5 +17,4 @@ share.playStone = (game, point_id) ->
     next_turn = 'black'
 
   $.Games.update(game._id, {$set: {stones: game.stones, current_turn: next_turn}})
-  $.game = $.Games.findOne() # i don't like this
   
