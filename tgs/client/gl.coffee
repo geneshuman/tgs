@@ -37,7 +37,7 @@ window.onload = () ->
   $.scene.add(pointLight)
 
   # init controls
-  $.controls = new THREE.TrackballControls($.camera);
+  $.controls = new THREE.TrackballControls($.camera, container);
   $.controls.rotateSpeed = 1.0;
   $.controls.zoomSpeed = 1.2;
   $.controls.panSpeed = 0.8;
