@@ -6,9 +6,9 @@
 standard-app-packages
 autopublish
 insecure
-preserve-inputs
 coffeescript
-jquery
-underscore
 accounts-password
 accounts-ui
+jquery
+underscore
+preserve-inputs

@@ -1,13 +1,13 @@
 #container{
-    width:600px;
-    height:600px;
+    width:800px;
+    height:800px;
     background-color:#DAEAFA;
     float:left;
     border:solid 2px black;
 }
 
 #console{
-    margin-left:605px;
+    margin-left:805px;
     padding:5px;
     width:200px;
     height:590px;
