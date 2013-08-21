@@ -49,6 +49,7 @@ window.onload = () ->
   # for checking mouse clicks
   $.projector = new THREE.Projector();
   $.points = []
+  $.stone_spheres = []
   document.addEventListener('mousedown', onDocumentMouseDown, false)
 
   $.active_stones = []
@@ -94,7 +95,7 @@ $.initScene = (game) ->
   for point in game.board.points
     pt = getPoint(0.7 * game.board.stone_radius, point.pos[0], point.pos[1], point.pos[2])
     $.graph.add(pt)
-    $.points.push([pt, point])
+    $.points.push(pt)
 
   # draw edges
   material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 2})
@@ -110,7 +111,9 @@ $.initScene = (game) ->
     $.graph.add(edge)
 
   # draw existing stones
+#  alert(77)
   $.updateStones()
+#  share.board_initialized = true
   
 
 # return a point
@@ -142,39 +145,64 @@ getSphere = (size, x, y, z, material) ->
 onDocumentMouseDown = (event) ->
   event.preventDefault();
 
+  game = $.currentGame()
+
+  # setup raycaster
   vector = new THREE.Vector3( ( event.clientX / $.WIDTH ) * 2 - 1, - ( event.clientY / $.HEIGHT ) * 2 + 1, 0.5 )
   $.projector.unprojectVector( vector, $.camera )
-
   raycaster = new THREE.Raycaster( $.camera.position, vector.sub( $.camera.position ).normalize() )
 
-  tmp = []
-  for e in $.points
-    tmp.push(e[0])
-
-  intersects = raycaster.intersectObjects(tmp)
+  # intersect for capturing stones
+  intersects = raycaster.intersectObjects($.stone_spheres)
 
   if intersects.length > 0
-    point_id = [pt[1].point_id for pt in $.points when pt[0] == intersects[0].object][0][0]
-    share.playStone($.currentGame(), point_id)
+    obj = intersects[0].object
+    $.pos = pos = [obj.position.x, obj.position.y, obj.position.z]
+    point_id = [pt.point_id for pt in game.board.points when pt.pos[0] == pos[0] && pt.pos[1] == pos[1] && pt.pos[2] == pos[2]][0][0]
+    alert(point_id)
+    #share.captureStone(game, point_id)
+    index = $.stone_spheres.indexOf(obj)
+    $.stone_spheres.splice(index, 1)
+    $.obj = obj
+    $.graph.remove(obj)
+    return
+
+  # can only do things if it's your turn
+  #if not $.isCurrentTurn(Meteor.user())
+  #  return
+
+  # intersect for stone placement
+  intersects = raycaster.intersectObjects($.points)
+
+  if intersects.length > 0
+    $.pos = pos = [intersects[0].object.position.x, intersects[0].object.position.y, intersects[0].object.position.z]
+    point_id = [pt.point_id for pt in game.board.points when pt.pos[0] == pos[0] && pt.pos[1] == pos[1] && pt.pos[2] == pos[2]][0][0]
+    share.playStone(game, point_id)
 
 
 # add a black stone
 addBlackStone = (size, x, y, z) ->
   material = new THREE.MeshPhongMaterial({specular: 0x666666, color: 0x333333, emissive: 0x000000, shininess: 20})
-  $.graph.add(getSphere(size, x, y, z, material))
+  sphere = getSphere(size, x, y, z, material)
+  $.stone_spheres.push(sphere)
+  $.graph.add(sphere)
+  $.graph.remove($.stone_spheres[0])
 
 
 # add a white stone
 addWhiteStone = (size, x, y, z) ->
   material = new THREE.MeshPhongMaterial({specular: 0xFFFFFF, color: 0xBBBBBB, emissive: 0x444444, shininess: 40})
-  $.graph.add(getSphere(size, x, y, z, material))
+  sphere = getSphere(size, x, y, z, material)
+  $.stone_spheres.push(sphere)
+  $.graph.add(sphere)
 
 
-# draw last stone
+# update stones
 $.updateStones = () ->
-  game = $.currentGame()
+#  alert(1)
+  game = $.currentGame()  
   for stone in game.stones
-    if $.inArray(stone, $.active_stones) != -1
+    if $.inArray(stone, $.active_stones) != -1 || stone.captured
       continue
     $.active_stones.push(stone)
     id = stone.point_id

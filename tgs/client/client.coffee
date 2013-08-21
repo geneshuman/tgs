@@ -1,3 +1,5 @@
+share.board_initialized = false
+
 $.Games = new Meteor.Collection("game")
 $.BoardTypes = new Meteor.Collection("boardTypes")
 
@@ -7,6 +9,13 @@ $.currentGame = () ->
   if not id
     return null
   $.Games.find({_id: id}).fetch()[0]
+
+# is current turn
+$.isCurrentTurn = (user) ->
+  game = $.currentGame()
+  for color, id of game.players
+    if id == user._id
+      return color == game.current_turn     
 
 # function to create a new game
 newGame = () ->
@@ -26,7 +35,7 @@ newGame = () ->
   id = $.Games.insert(game)
   Session.set("current_game_id", id)
 
-
+# join an existing game
 joinGame = (event) ->
   id = event.currentTarget.id
   game = $.Games.find({_id: id}).fetch()[0]
@@ -63,7 +72,7 @@ Template.console.helpers {
 Meteor.startup () ->  
   Deps.autorun () ->
     game = $.currentGame()
-    if not game
+    if not game 
       return
 
     $.initScene(game)

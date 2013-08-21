@@ -3,7 +3,8 @@
 #
 
 
-share.playStone = (game, point_id) ->  
+share.playStone = (game, point_id) ->
+  # add stone
   stone = {
     point_id: point_id,
     player: game.current_turn,
@@ -11,6 +12,7 @@ share.playStone = (game, point_id) ->
   }
   game.stones.push(stone)
 
+  #update turn
   if game.current_turn == 'black'
     next_turn = 'white'
   else
@@ -18,3 +20,7 @@ share.playStone = (game, point_id) ->
 
   $.Games.update(game._id, {$set: {stones: game.stones, current_turn: next_turn}})
   
+
+share.captureStone = (game, point_id) ->
+  0
+
