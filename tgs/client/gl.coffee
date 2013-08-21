@@ -1,13 +1,13 @@
 # initialization
 window.onload = () ->
-  container = $('#container')
-  $.WIDTH = container.width()
-  $.HEIGHT = container.height()
+  $.container = $('#container')
+  $.WIDTH = $.container.width()
+  $.HEIGHT = $.container.height()
 
   # create renderer
   $.renderer = new THREE.WebGLRenderer()
   $.renderer.setSize($.WIDTH, $.HEIGHT)
-  container.append($.renderer.domElement)
+  $.container.append($.renderer.domElement)
 
   # initialize scene
   $.scene = new THREE.Scene()
@@ -37,7 +37,7 @@ window.onload = () ->
   $.scene.add(pointLight)
 
   # init controls
-  $.controls = new THREE.TrackballControls($.camera, container);
+  $.controls = new THREE.TrackballControls($.camera, $.container[0]);
   $.controls.rotateSpeed = 1.0;
   $.controls.zoomSpeed = 1.2;
   $.controls.panSpeed = 0.8;
@@ -50,7 +50,7 @@ window.onload = () ->
   $.projector = new THREE.Projector();
   $.points = []
   $.stone_spheres = []
-  document.addEventListener('mousedown', onDocumentMouseDown, false)
+  $.container[0].addEventListener('mousedown', onDocumentMouseDown, false)
 
   $.active_stones = []
 
@@ -77,7 +77,7 @@ window.onload = () ->
 $.animate = () ->
   requestAnimationFrame($.animate)
   $.renderer.render($.scene, $.camera)
-  $.controls.update()
+#  $.controls.update()
 
 #  $.renderer.clear()
 #  if $.composer
