@@ -111,9 +111,7 @@ $.initScene = (game) ->
     $.graph.add(edge)
 
   # draw existing stones
-#  alert(77)
   $.updateStones()
-#  share.board_initialized = true
   
 
 # return a point
@@ -159,12 +157,8 @@ onDocumentMouseDown = (event) ->
     obj = intersects[0].object
     $.pos = pos = [obj.position.x, obj.position.y, obj.position.z]
     point_id = [pt.point_id for pt in game.board.points when pt.pos[0] == pos[0] && pt.pos[1] == pos[1] && pt.pos[2] == pos[2]][0][0]
-    alert(point_id)
-    #share.captureStone(game, point_id)
-    index = $.stone_spheres.indexOf(obj)
-    $.stone_spheres.splice(index, 1)
-    $.obj = obj
-    $.graph.remove(obj)
+
+    share.captureStone(game, point_id)
     return
 
   # can only do things if it's your turn
@@ -186,7 +180,6 @@ addBlackStone = (size, x, y, z) ->
   sphere = getSphere(size, x, y, z, material)
   $.stone_spheres.push(sphere)
   $.graph.add(sphere)
-  $.graph.remove($.stone_spheres[0])
 
 
 # add a white stone
@@ -199,12 +192,19 @@ addWhiteStone = (size, x, y, z) ->
 
 # update stones
 $.updateStones = () ->
-#  alert(1)
-  game = $.currentGame()  
+  game = $.currentGame()
+
+  # remove all stones
+  for sphere in $.stone_spheres
+    $.graph.remove(sphere)
+
+  $.stone_spheres = [] 
+
+  # draw stones
   for stone in game.stones
-    if $.inArray(stone, $.active_stones) != -1 || stone.captured
+    if stone.captured
       continue
-    $.active_stones.push(stone)
+
     id = stone.point_id
     pos = [pt.pos for pt in game.board.points when pt.point_id == id][0][0]
     if stone.player == 'black'

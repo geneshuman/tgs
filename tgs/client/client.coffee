@@ -1,4 +1,4 @@
-share.board_initialized = false
+board_initialized = false
 
 $.Games = new Meteor.Collection("game")
 $.BoardTypes = new Meteor.Collection("boardTypes")
@@ -30,6 +30,7 @@ newGame = () ->
     },
     current_turn: 'black',
     stones: [],
+    captured_stones: [],
     board: board
   }
   id = $.Games.insert(game)
@@ -75,7 +76,10 @@ Meteor.startup () ->
     if not game 
       return
 
-    $.initScene(game)
+    if not board_initialized
+      $.initScene(game)
+      board_initialized = true
+
     $.Games.find({_id: game._id}).observeChanges {changed: (id, fields) ->
       $.updateStones()
     }

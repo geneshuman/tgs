@@ -22,5 +22,9 @@ share.playStone = (game, point_id) ->
   
 
 share.captureStone = (game, point_id) ->
-  0
+  stone = [stone for stone in game.stones when stone.point_id == point_id and not stone.captured][0][0]
+  stone.point_id = null
+  stone.captured = true
+
+  $.Games.update(game._id, {$set: {stones: game.stones}})
 
