@@ -1,0 +1,30 @@
+<template name="gameConsole">
+  <div id="players">
+    <div id="black" {{#if currentTurnIs "black"}}class="currentTurn"{{/if}}>
+      <img class="playerStone" src="stone_black.png">
+      <span class="playerName">
+	{{blackName}}
+      </span>
+      <br/>
+      <img class="captureStone" src="stone_white.png">
+      <span class="numCaptures">
+	{{numBlackCaptures}}&nbsp; prisoners
+      </span>
+    </div>
+    <div id="white" {{#if currentTurnIs "white"}}class="currentTurn"{{/if}}>
+      <img class="playerStone" src="stone_white.png">
+      <span class="playerName">
+	{{whiteName}}
+      </span>
+      <br/>
+      <img class="captureStone" src="stone_black.png">
+      <span class="numCaptures">
+	{{numWhiteCaptures}}&nbsp; prisoners
+      </span>
+    </div>
+  </div>
+  <div id="actions">
+    <div id="numMoves">{{numMoves}}&nbsp;moves</div>
+    <button class="buttonOrangeBox" id="undoButton">Undo</button><button class="buttonOrangeBox" id="passButton">Pass</button><button class="buttonRedBox" id="resignButton">Resign</buttonm>    
+  </div>
+</template>
