@@ -88,13 +88,15 @@ $.animate = () ->
 
 # draph initial graph
 $.initScene = (game) ->
+  if ! $.scene
+    return
   
   $.graph = new THREE.Object3D();
   $.scene.add($.graph);
 
   # draw dots
   for point in game.board.points
-    pt = getPoint(0.7 * game.board.stone_radius, point.pos[0], point.pos[1], point.pos[2])
+    pt = getPoint(0.65 * game.board.stone_radius, point.pos[0], point.pos[1], point.pos[2])
     $.graph.add(pt)
     $.points.push(pt)
 
@@ -117,8 +119,7 @@ $.initScene = (game) ->
 
 # return a point
 getPoint = (size, x, y, z) ->
-  material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: 0x990000, emissive: 0x660000, shininess: 30})
-#  material.opacity = 0.5
+  material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: 0x990000, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
   sphere = getSphere(size, x, y, z, material)
   sphere
 

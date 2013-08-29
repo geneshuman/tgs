@@ -13,6 +13,25 @@
   </div>
 </body>
 
+<template name="console">
+  <div id="console">
+    <div id="title">
+      {{#unless currentUser}}
+      {{loginButtons align="right"}}
+      {{else}}
+      <a id="titleDropDown" class="logout" href="javascript:void(0)">{{username}}&nbsp;▾</a>
+      {{/unless}}
+      <img src="logo_small.png" />
+      <h2>TGS</h2>
+    </div>
+    {{#if currentGame}}
+    {{> gameConsole}}
+    {{else}}
+    {{> lobbyConsole}}
+    {{/if}}
+  </div>
+</template>
+
 <template name="game">
   {{#constant}}
   <div id="glContainer"></div>

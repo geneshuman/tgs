@@ -2,6 +2,11 @@
 # Game
 #
 
+share.otherPlayer = (player) ->
+  if player == 'black'
+    'white'
+  else
+    'black'
 
 share.playStone = (game, point_id) ->
   # add stone
@@ -26,5 +31,8 @@ share.captureStone = (game, point_id) ->
   stone.point_id = null
   stone.captured = true
 
-  $.Games.update(game._id, {$set: {stones: game.stones}})
+  captures = game.captures  
+  captures[share.otherPlayer(stone.player)] += 1
+
+  $.Games.update(game._id, {$set: {stones: game.stones, captures: captures}})
 

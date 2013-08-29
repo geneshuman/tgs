@@ -1,4 +1,3 @@
-
 html, body{
    height:100%;
    padding:0px;
@@ -8,9 +7,11 @@ html, body{
 
 table, table tr, table td { padding:none;border:none;border-spacing:0;}
 
+a{text-decoration:none}
+
 #glContainer{
     width:auto;
-    background-color:#DAEAFA;
+    background-color:#EAEAFA;
     border-right:solid 1px black;
     height:100%;
 }

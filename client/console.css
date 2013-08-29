@@ -32,11 +32,18 @@
 
 #newGameDialog{
     padding-top:5px;
+    width:100%;
+    text-align:center;
+}
+
+#showNewGameButton{
+    margin-left:115px;
 }
 
 #gamesList th{
     border-bottom:solid 1px black;
     padding:5px;
+    text-align:left;
 }
 
 #gamesList td{
@@ -58,48 +65,61 @@ a#titleDropDown{
 }
 
 
-#login-buttons .login-link-text {
-	-moz-box-shadow:inset 0px 0px 15px 0px #bbdaf7;
-	-webkit-box-shadow:inset 0px 0px 15px 0px #bbdaf7;
-	box-shadow:inset 0px 0px 15px 0px #bbdaf7;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
-	background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
-	background-color:#79bbff;
-	-webkit-border-top-left-radius:9px;
-	-moz-border-radius-topleft:9px;
-	border-top-left-radius:9px;
-	-webkit-border-top-right-radius:9px;
-	-moz-border-radius-topright:9px;
-	border-top-right-radius:9px;
-	-webkit-border-bottom-right-radius:9px;
-	-moz-border-radius-bottomright:9px;
-	border-bottom-right-radius:9px;
-	-webkit-border-bottom-left-radius:9px;
-	-moz-border-radius-bottomleft:9px;
-	border-bottom-left-radius:9px;
-	text-indent:0;
-	border:1px solid #84bbf3;
-	display:inline-block;
-	color:#ffffff;
-	font-family:Arial;
-	font-size:15px;
-	font-weight:bold;
-	font-style:normal;
-	height:27px;
-	line-height:27px;
-	width:100px;
-	text-decoration:none;
-	text-align:center;
-	text-shadow:1px -1px 0px #528ecc;
-	text-decoration:none;
+#players #black{
+    width:50%;
+    border:solid 1px black;
+    border-left:solid 1px white;
+    float:left;
+    height:100px;
 }
-.login-link-text:hover {
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
-	background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
-	background-color:#378de5;
-}.login-link-text:active {
-	position:relative;
-	top:1px;
+
+#players #white{
+    width:50%;
+    border:solid 1px black;
+    border-left:solid 1px white;
+    border-right:solid 1px white;
+    margin-left:50%;
+    height:100px;
+}
+
+.playerStone{
+    float:left;
+    width:40px;
+    height:40px;
+    margin:5px;
+}
+
+.captureStone{
+    float:left;
+    margin:5px;
+    width:30px;
+    height:30px;
+    margin-left:10px;
+}
+
+.playerName{
+    display:block;
+    margin-left:55px;
+    margin-top:15px;
+    margin-bottom:5px;
+}
+
+.numCaptures{
+    display:block;
+    margin-left:40px;
+    margin-top:11px;
+}
+
+.currentTurn{
+    background-color:#EEEEFF;
+}
+
+#numMoves{
+    display:inline-block;
+    width:85px;
+    margin-left:5px;
+}
+
+#actions{
+    border-bottom:solid 1px black;
 }
