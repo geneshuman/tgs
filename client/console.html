@@ -1,0 +1,95 @@
+<template name="console">
+  <div id="console">
+    <div id="title">
+      {{#unless currentUser}}
+      {{loginButtons align="right"}}
+      {{else}}
+      <a id="titleDropDown" class="logout" href="javascript:void(0)">{{username}}&nbsp;▾</a>
+      {{/unless}}
+
+      <img src="logo_small.png" />
+      <h2>TGS</h2>
+    </div>
+
+    {{#unless currentGame}}
+    {{#unless anyGames}}
+    <h3>
+      No Active Games
+    </h3>
+    {{else}}
+    <h3>
+      Active Games
+    </h3>
+
+    <div id="gamesList">
+      <table>
+	<tr>
+	  <th>
+	    Black
+	  </th>
+	  <th>
+	    White
+	  </th>
+	  <th>
+	    Board
+	  </th>
+	  <th>
+	    Moves
+	  </th>
+	  <th>
+	  </th>
+	</tr>
+	{{# each games}}
+	{{> gameSummary}}
+	{{/each}}
+      </table>
+    </div>
+    {{/unless}}
+    {{#if currentUser}}
+    <br/>
+    <button id="showNewGameButton" onclick="$(this).hide();$('#newGameDialog').show();">New Game</button>
+    <div id="newGameDialog" style="display:none;">
+      Board Type:
+      <select id="selectBoard">
+	{{# each boardTypes}}
+	{{> boardType}}
+	{{/each}}
+      </select>
+      <button id="newGameButton">Go!</button>
+    </div>
+    {{/if}}
+    {{/unless}}
+  </div>
+</template>
+
+<template name="boardType">
+  <option value="{{name}}">{{name}}</option>
+</template>
+
+<template name="gameSummary">
+  <tr>
+    <td>
+      {{black}}
+    </td>
+    <td>
+      {{white}}
+    </td>
+    <td>
+      {{boardType}}
+    </td>
+    <td>
+      {{moves}}
+    </td>
+    <td>
+      {{#if available}}
+      <a class="joinGame" href="javascript:void(0)" id="{{_id}}">
+	Join
+      </a>
+      {{else}}
+      <a class="observeGame" href="javascript:void(0)" id="{{_id}}">
+	Observe
+      </a>
+      {{/if}}
+    </td>
+  </tr>
+</template>

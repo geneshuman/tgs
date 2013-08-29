@@ -62,6 +62,9 @@ observeGame = (event) ->
 Template.console.games = () ->    
   $.Games.find()
 
+Template.console.username = () ->  
+  Meteor.user().username
+
 Template.console.boardTypes = () ->
   $.BoardTypes.find()
   
@@ -71,7 +74,8 @@ Template.console.currentGame = () ->
 Template.console.events {
   'click #newGameButton': newGame,
   'click .joinGame': joinGame,
-  'click .observeGame': observeGame
+  'click .observeGame': observeGame,
+  'click .logout': () -> Meteor.logout()
 }
 
 Template.console.helpers {
@@ -99,7 +103,9 @@ Template.gameSummary.helpers {
 }
 
 # startup
-Meteor.startup () ->  
+Meteor.startup () ->
+  #Meteor.logout()
+
   Deps.autorun () ->
     game = $.currentGame()
     if not game 

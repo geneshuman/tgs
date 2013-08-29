@@ -1,6 +1,6 @@
 # initialization
 window.onload = () ->
-  $.container = $('#container')
+  $.container = $('#glContainer')
   $.WIDTH = $.container.width()
   $.HEIGHT = $.container.height()
 
@@ -118,7 +118,7 @@ $.initScene = (game) ->
 # return a point
 getPoint = (size, x, y, z) ->
   material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: 0x990000, emissive: 0x660000, shininess: 30})
-  material.opacity = 0.5
+#  material.opacity = 0.5
   sphere = getSphere(size, x, y, z, material)
   sphere
 
@@ -165,8 +165,8 @@ onDocumentMouseDown = (event) ->
     return
 
   # can only do things if it's your turn
-  if not $.isCurrentTurn(Meteor.user())
-    return
+#  if not $.isCurrentTurn(Meteor.user())
+#    return
 
   # intersect for stone placement
   intersects = raycaster.intersectObjects($.points)
