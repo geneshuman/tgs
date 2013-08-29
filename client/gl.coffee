@@ -50,6 +50,7 @@ window.onload = () ->
   $.projector = new THREE.Projector();
   $.points = []
   $.stone_spheres = []
+
   $.container[0].addEventListener('mousedown', onDocumentMouseDown, false)
 
   $.active_stones = []
@@ -77,7 +78,7 @@ window.onload = () ->
 $.animate = () ->
   requestAnimationFrame($.animate)
   $.renderer.render($.scene, $.camera)
-#  $.controls.update()
+  $.controls.update()
 
 #  $.renderer.clear()
 #  if $.composer
@@ -117,7 +118,9 @@ $.initScene = (game) ->
 # return a point
 getPoint = (size, x, y, z) ->
   material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: 0x990000, emissive: 0x660000, shininess: 30})
-  getSphere(size, x, y, z, material)
+  material.opacity = 0.5
+  sphere = getSphere(size, x, y, z, material)
+  sphere
 
 
 # return a sphere
@@ -162,8 +165,8 @@ onDocumentMouseDown = (event) ->
     return
 
   # can only do things if it's your turn
-  #if not $.isCurrentTurn(Meteor.user())
-  #  return
+  if not $.isCurrentTurn(Meteor.user())
+    return
 
   # intersect for stone placement
   intersects = raycaster.intersectObjects($.points)

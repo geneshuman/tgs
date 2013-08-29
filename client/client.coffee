@@ -12,6 +12,8 @@ $.currentGame = () ->
 
 # is current turn
 $.isCurrentTurn = (user) ->
+  if Session.get("observing_game")
+    return false 
   game = $.currentGame()
   for color, id of game.players
     if id == user._id
@@ -47,6 +49,13 @@ joinGame = (event) ->
     players.white = Meteor.user()._id
   $.Games.update({_id: id}, {$set: {players: players}})
   Session.set("current_game_id", game._id)
+
+# observe an existing game
+observeGame = (event) ->
+  id = event.currentTarget.id
+  game = $.Games.find({_id: id}).fetch()[0]
+  Session.set("current_game_id", game._id)
+  Session.set("observing_game", true)
   
 
 # Templates
@@ -61,12 +70,32 @@ Template.console.currentGame = () ->
 
 Template.console.events {
   'click #newGameButton': newGame,
-  'click .joinGame': joinGame
+  'click .joinGame': joinGame,
+  'click .observeGame': observeGame
 }
 
 Template.console.helpers {
   anyGames: () ->
     $.Games.find().fetch().length != 0
+}
+
+Template.gameSummary.helpers {
+  black: () ->
+    user = Meteor.users.find({_id: this.players.black}).fetch()[0]
+    if user
+      user.username
+    else
+      "None"
+  ,white: () ->
+    user = Meteor.users.find({_id: this.players.white}).fetch()[0]
+    if user
+      user.username
+    else
+      "None"
+  ,moves: () ->
+    this.stones.length
+  ,available: () ->
+    !this.players.black || !this.players.white
 }
 
 # startup

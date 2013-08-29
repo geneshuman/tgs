@@ -1,0 +1,29 @@
+#container{
+    width:800px;
+    height:800px;
+    background-color:#DAEAFA;
+    float:left;
+    border:solid 2px black;
+}
+
+#console{
+    margin-left:805px;
+    padding:5px;
+    width:300px;
+    height:790px;
+    border:solid 2px black;
+}
+
+#newGameDialog{
+    padding-top:5px;
+}
+
+#gamesList th{
+    border-bottom:solid 1px black;
+    padding:5px;
+}
+
+#gamesList td{
+    border-bottom:solid 1px black;
+    padding:5px;
+}

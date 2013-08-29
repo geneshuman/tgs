@@ -28,13 +28,34 @@
 
     {{#unless anyGames}}
     No Active Games<br/><br/>
+    {{else}}
+
+    <div id="gamesList">
+      <table>
+	<tr>
+	  <th>
+	    Black
+	  </th>
+	  <th>
+	    White
+	  </th>
+	  <th>
+	    Board Type
+	  </th>
+	  <th>
+	    Moves
+	  </th>
+	  <th>
+	  </th>
+	</tr>
+	{{# each games}}
+	{{> gameSummary}}
+	{{/each}}
+      </table>
+    </div>
     {{/unless}}
-
-    {{# each games}}
-    {{> gameSummary}}
-    {{/each}}
-
     {{#if currentUser}}
+    <br/>
     <button id="showNewGameButton" onclick="$(this).hide();$('#newGameDialog').show();">New Game</button>
     <div id="newGameDialog" style="display:none;">
       Board Type:
@@ -43,7 +64,6 @@
 	{{> boardType}}
 	{{/each}}
       </select>
-      <br/>
       <button id="newGameButton">Go!</button>
     </div>
     {{/if}}
@@ -56,8 +76,29 @@
 </template>
 
 <template name="gameSummary">
-<a class="joinGame" href="javascript:void(0)" id="{{_id}}">
-  {{boardType}}
-</a>
-<br/>
+  <tr>
+    <td>
+      {{black}}
+    </td>
+    <td>
+      {{white}}
+    </td>
+    <td>
+      {{boardType}}
+    </td>
+    <td>
+      {{moves}}
+    </td>
+    <td>
+      {{#if available}}
+      <a class="joinGame" href="javascript:void(0)" id="{{_id}}">
+	Join
+      </a>
+      {{else}}
+      <a class="observeGame" href="javascript:void(0)" id="{{_id}}">
+	Observe
+      </a>
+      {{/if}}
+    </td>
+  </tr>
 </template>
