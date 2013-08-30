@@ -13,14 +13,14 @@ share.playStone = (game, point_id) ->
     return false
 
   # occupied or ko
-  if point_id in game.occupied_points or point_id in ko_points
+  if point_id in game.occupied_points or point_id in game.ko_points
     return false
 
   # update aux data
-  dead_points = $.updateAuxData(game, point_id)
+  res = share.updateAuxData(game, point_id)
 
   # move was suicide
-  if not dead_points
+  if not res
     return false  
   
   # add stone
@@ -33,10 +33,11 @@ share.playStone = (game, point_id) ->
 
   # capture dead stones
   for stone in game.stones
-    if indexOf(dead_points, stone.point_id) != -1
+    if res.dead_points.indexOf(stone.point_id) != -1
+      game.captures[game.current_turn] += 1
       stone.captured = true
 
-  Games.update(game._id, {$set: {stones: game.stones, current_turn: share.otherPlayer(game.current_turn)}})
+  Games.update(game._id, {$set: {stones: game.stones, captures: game.captures, groups: res.groups, occupied_points: res.occupied_points, ko_points: res.ko_points, current_turn: share.otherPlayer(game.current_turn)}})
 
 
 share.clickStone = (game, point_id) ->

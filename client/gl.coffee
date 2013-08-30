@@ -74,13 +74,18 @@ $.initScene = (game) ->
   # draw dots & edges
   $.graph = new THREE.Object3D();
   $.scene.add($.graph);
-
-  point_material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: 0x990000, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
+  
   line_material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 2})
 
   for id, point of game.board.points
     p0 = point.pos
 
+    c0 = Math.round(255 * (0.25 * (p0[0] + 1.0) + .2))
+    c1 = Math.round(255 * (0.25 * (p0[1] + 1.0) + .2))
+    c2 = Math.round(255 * (0.25 * (p0[2] + 1.0) + .2))
+    color = (2 << 15) * c0 + (2 << 7) * c1 + c2
+    console.log color
+    point_material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: color, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
     pt = getSphere(0.65 * game.board.stone_radius, p0[0], p0[1], p0[2], point_material)
     $.graph.add(pt)
     $.point_spheres.push(pt)

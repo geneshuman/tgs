@@ -16,11 +16,11 @@ newGame = () ->
     boardType: name,
     players: {
       black: Meteor.user()._id,
-      white: null
+      white: Meteor.user()._id
     },
     current_turn: 'black',
     stones: [],
-    state: "awaitingPlayer", # awaitingPlayer -> active -> requestUndo -> pass -> scoring -> completed
+    state: "active", # awaitingPlayer -> active -> requestUndo -> pass -> scoring -> completed
     captures: {
       black: 0,
       white: 0

@@ -78,7 +78,7 @@ Meteor.startup () ->
         share.playStone(game, stone.point_id, true)
 
       # game aux data
-      $.initAuxData(game)
+      share.initAuxData(game)
 
     # game change observers
     $.Games.find({_id: game._id}).observeChanges {changed: (id, fields) ->

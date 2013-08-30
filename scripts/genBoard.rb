@@ -86,7 +86,7 @@ class Board
   \"points\": {
 "
     str += @nodes.map do |n| 
-      "\n\"#{n.id}\":{\n\"pos\":[#{n.x},#{n.y},#{n.z}],\n\"neighbors\":[#{neighbors(n).map{|c| c.id}.join(',')}]\n}"
+      "\n\"#{n.id}\":{\n\"pos\":[#{n.x},#{n.y},#{n.z}],\n\"neighbors\":[#{neighbors(n).map{|c| '"' + c.id.to_s + '"'}.join(',')}]\n}"
     end.join(",\n")
 
  #   str += "],\n\"edges\": [\n"
