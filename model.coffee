@@ -12,8 +12,12 @@ share.playStone = (game, point_id) ->
   if game.state != "active" && game.state != "pass"
     return false
 
-  # occupied or ko
-  if point_id in game.occupied_points or point_id in game.ko_points
+  # occupied 
+  if _.keys(game.occupied_points).indexOf(point_id) != -1
+    return false
+
+  # ko
+  if game.ko_points.indexOf(point_id) != -1
     return false
 
   # update aux data

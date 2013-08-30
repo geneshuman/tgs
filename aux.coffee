@@ -106,6 +106,12 @@ share.updateAuxData = (game, point_id) ->
   if liberties.length == 0
     return false
 
+  # check for ko
+  if liberties.length == 1 && _.isEqual(dead_points,liberties)
+    game.ko_points.push(liberties[0])
+  else
+    game.ko_points = []    
+
   # update aux data
   Games.update(game._id, {$set: {}})
 

@@ -84,7 +84,6 @@ $.initScene = (game) ->
     c1 = Math.round(255 * (0.25 * (p0[1] + 1.0) + .2))
     c2 = Math.round(255 * (0.25 * (p0[2] + 1.0) + .2))
     color = (2 << 15) * c0 + (2 << 7) * c1 + c2
-    console.log color
     point_material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: color, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
     pt = getSphere(0.65 * game.board.stone_radius, p0[0], p0[1], p0[2], point_material)
     $.graph.add(pt)
@@ -156,13 +155,13 @@ onDocumentMouseDown = (event) ->
   raycaster = new THREE.Raycaster( $.camera.position, vector.sub( $.camera.position ).normalize() )
 
   # intersect for capturing stones
-  intersects = raycaster.intersectObjects($.stone_spheres)
+#  intersects = raycaster.intersectObjects($.stone_spheres)
 
-  if intersects.length > 0
-    obj = intersects[0].object
-    point_id = $.pos_to_id[[obj.position.x, obj.position.y, obj.position.z]]
+#  if intersects.length > 0
+#    obj = intersects[0].object
+#    point_id = $.pos_to_id[[obj.position.x, obj.position.y, obj.position.z]]
 #    share.clickStone(game, point_id)
-    return
+#    return
 
   # can only do things if it's your turn
   if not $.isCurrentTurn(Meteor.user())
@@ -182,6 +181,8 @@ addStone = (color, size, x, y, z) ->
     material = new THREE.MeshPhongMaterial({specular: 0x666666, color: 0x333333, emissive: 0x000000, shininess: 20})
   else if color == "white"
     material = new THREE.MeshPhongMaterial({specular: 0xFFFFFF, color: 0xBBBBBB, emissive: 0x444444, shininess: 40})
+  else if color == "ko"
+    material = new THREE.MeshPhongMaterial({specular: 0xAAAAFF, color: 0x3333BB, emissive: 0x222244, shininess: 80})
 
   sphere = getSphere(size, x, y, z, material)
   $.stone_spheres.push(sphere)
@@ -206,3 +207,8 @@ $.updateStones = () ->
     id = stone.point_id
     pos = game.board.points[stone.point_id].pos
     addStone(stone.player, game.board.stone_radius, pos[0], pos[1], pos[2])
+
+  # mark ko points
+  for point_id in game.ko_points
+    pos = game.board.points[point_id].pos
+    addStone("ko", 0.8 * game.board.stone_radius, pos[0], pos[1], pos[2])

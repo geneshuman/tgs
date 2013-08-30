@@ -30,7 +30,7 @@ newGame = () ->
       score: null # number or -1 for resign
     }
     occupied_points:{},
-    ko_points:{},
+    ko_points:[],
     groups:{},
     board: board
   }
