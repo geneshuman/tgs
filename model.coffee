@@ -2,10 +2,26 @@
 # Game
 #
 
-share.playStone = (game, point_id, noupdate=false) ->
-  # CHECK IF MOVE IS VALID - can't be occupied, KO, or suicide, game state is correct
+if typeof $ != 'undefined'
+  Games = $.Games
+else
+  Games = share.Games
+
+share.playStone = (game, point_id) ->
+  # correct game state
   if game.state != "active" && game.state != "pass"
     return false
+
+  # occupied or ko
+  if point_id in game.occupied_points or point_id in ko_points
+    return false
+
+  # update aux data
+  dead_points = $.updateAuxData(game, point_id)
+
+  # move was suicide
+  if not dead_points
+    return false  
   
   # add stone
   stone = {
@@ -15,11 +31,12 @@ share.playStone = (game, point_id, noupdate=false) ->
   }
   game.stones.push(stone)
 
-  # update groups
-  if noupdate
-    return
+  # capture dead stones
+  for stone in game.stones
+    if indexOf(dead_points, stone.point_id) != -1
+      stone.captured = true
 
-  $.Games.update(game._id, {$set: {stones: game.stones, current_turn: share.otherPlayer(game.current_turn)}})
+  Games.update(game._id, {$set: {stones: game.stones, current_turn: share.otherPlayer(game.current_turn)}})
 
 
 share.clickStone = (game, point_id) ->
@@ -34,7 +51,7 @@ share.playerResign = (game, player) ->
   game.score.winner = share.otherPlayer(player)
   game.score.score = -1
 
-  $.Games.update(game._id, {$set: {state: "completed", score: game.score}})
+  Games.update(game._id, {$set: {state: "completed", score: game.score}})
 
   # updatePlayerRecords
 
@@ -44,9 +61,9 @@ share.pass = (game) ->
     return false
 
   if game.state == "pass"
-    $.Games.update(game._id, {$set: {state: "scoring"}})
+    Games.update(game._id, {$set: {state: "scoring"}})
   else
-    $.Games.update(game._id, {$set: {state: "pass", current_turn:share.otherPlayer(game.current_turn)}})
+    Games.update(game._id, {$set: {state: "pass", current_turn:share.otherPlayer(game.current_turn)}})
 
 
 share.undoLastMove = (game) ->
@@ -62,5 +79,5 @@ share.captureStone = (game, point_id) ->
   captures = game.captures  
   captures[share.otherPlayer(stone.player)] += 1
 
-  $.Games.update(game._id, {$set: {stones: game.stones, captures: captures}})
+  Games.update(game._id, {$set: {stones: game.stones, captures: captures}})
 

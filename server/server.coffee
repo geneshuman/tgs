@@ -1,9 +1,9 @@
-Games = new Meteor.Collection("game")
+share.Games = new Meteor.Collection("game")
 BoardTypes = new Meteor.Collection("boardTypes")
 Connections = new Meteor.Collection("connections")
 
 Meteor.startup () ->
-#  Games.remove({})
+#  share.Games.remove({})
 
   # load boards from server
   BoardTypes.remove({})

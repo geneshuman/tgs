@@ -6,6 +6,7 @@ availableGames = () ->
     _.filter $.Games.find().fetch(), (game) ->
       game.players.white && game.players.black
 
+
 # function to create a new game
 newGame = () ->
   name = $('#selectBoard').val()
@@ -28,10 +29,14 @@ newGame = () ->
       winner: null, # 'black', 'white', or 'tie'
       score: null # number or -1 for resign
     }
+    occupied_points:{},
+    ko_points:{},
+    groups:{},
     board: board
   }
   id = $.Games.insert(game)
   Session.set("current_game_id", id)
+
 
 # join an existing game
 joinGame = (event) ->
@@ -45,12 +50,14 @@ joinGame = (event) ->
   $.Games.update({_id: id}, {$set: {players: players, state: 'active'}})
   Session.set("current_game_id", game._id)
 
+
 # observe an existing game
 observeGame = (event) ->
   id = event.currentTarget.id
   game = $.Games.find({_id: id}).fetch()[0]
   Session.set("current_game_id", game._id)
   Session.set("observing_game", true)
+
   
 # Templates
 Template.lobbyConsole.availableGames = () ->
