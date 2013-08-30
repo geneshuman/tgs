@@ -48,12 +48,7 @@ $.initScene = (game) ->
 
   # for checking mouse clicks
   $.projector = new THREE.Projector();
-  $.point_spheres = []
-  $.stone_spheres = []
-
   $.container[0].addEventListener('mousedown', onDocumentMouseDown, false)
-
-  $.active_stones = []
 
   # antialiasing
   # dpr = 1;
@@ -71,16 +66,18 @@ $.initScene = (game) ->
   # $.composer.addPass(effectFXAA);
   # $.composer.render()
 
-  # start
-  animate()
-  
+
+  # aux data
+  $.point_spheres = []
+  $.stone_spheres = []
+  $.pos_to_id = {}
+
+  # draw dots & edges
   $.graph = new THREE.Object3D();
   $.scene.add($.graph);
 
-  # draw dots & edges
   point_material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: 0x990000, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
   line_material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 2})
-  $.pos_to_id = {}
 
   for id, point of game.board.points
     p0 = point.pos
@@ -104,6 +101,9 @@ $.initScene = (game) ->
 
   # draw existing stones
   $.updateStones()
+
+  # start
+  animate()
 
 
 # empty scene
@@ -175,7 +175,7 @@ onDocumentMouseDown = (event) ->
     share.playStone(game, $.pos_to_id[pos])
 
 
-# add a black stone
+# add a stone
 addStone = (color, size, x, y, z) ->
   if color == "black"
     material = new THREE.MeshPhongMaterial({specular: 0x666666, color: 0x333333, emissive: 0x000000, shininess: 20})
