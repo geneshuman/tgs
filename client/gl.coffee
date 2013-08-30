@@ -48,7 +48,7 @@ $.initScene = (game) ->
 
   # for checking mouse clicks
   $.projector = new THREE.Projector();
-  $.points = []
+  $.point_spheres = []
   $.stone_spheres = []
 
   $.container[0].addEventListener('mousedown', onDocumentMouseDown, false)
@@ -72,18 +72,25 @@ $.initScene = (game) ->
   # $.composer.render()
 
   # start
-  $.animate()
+  animate()
   
   $.graph = new THREE.Object3D();
   $.scene.add($.graph);
 
   # draw dots & edges
+  point_material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: 0x990000, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
+  line_material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 2})
+  $.pos_to_id = {}
+
   for id, point of game.board.points
     p0 = point.pos
-    pt = getPoint(0.65 * game.board.stone_radius, p0[0], p0[1], p0[2])
+
+    pt = getSphere(0.65 * game.board.stone_radius, p0[0], p0[1], p0[2], point_material)
     $.graph.add(pt)
-    $.points.push(pt)
-    
+    $.point_spheres.push(pt)
+
+    $.pos_to_id[p0] = id
+
     # edges    
     for neighbor in point.neighbors
       p1 = game.board.points[neighbor].pos
@@ -92,11 +99,11 @@ $.initScene = (game) ->
       geometry.vertices.push( new THREE.Vector3(p0[0], p0[1], p0[2]) );
       geometry.vertices.push( new THREE.Vector3(p1[0], p1[1], p1[2]) );
 
-      edge = new THREE.Line(geometry, material)
+      edge = new THREE.Line(geometry, line_material)
       $.graph.add(edge)    
 
   # draw existing stones
-#  $.updateStones()
+  $.updateStones()
 
 
 # empty scene
@@ -105,8 +112,8 @@ $.clearScene = () ->
 
 
 # rendering loop <- probably overkill
-$.animate = () ->
-  requestAnimationFrame($.animate)
+animate = () ->
+  requestAnimationFrame(animate)
   $.renderer.render($.scene, $.camera)
   $.controls.update()
 
@@ -115,13 +122,6 @@ $.animate = () ->
 #    alert(1)
 #    $.composer.render()
 
-  
-
-# return a point
-getPoint = (size, x, y, z) ->
-  material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: 0x990000, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
-  sphere = getSphere(size, x, y, z, material)
-  sphere
 
 
 # return a sphere
@@ -159,10 +159,8 @@ onDocumentMouseDown = (event) ->
 
   if intersects.length > 0
     obj = intersects[0].object
-    $.pos = pos = [obj.position.x, obj.position.y, obj.position.z]
-    point_id = [pt.point_id for pt in game.board.points when pt.pos[0] == pos[0] && pt.pos[1] == pos[1] && pt.pos[2] == pos[2]][0][0]
-
-    share.clickStone(game, point_id)
+    point_id = $.pos_to_id[[obj.position.x, obj.position.y, obj.position.z]]
+#    share.clickStone(game, point_id)
     return
 
   # can only do things if it's your turn
@@ -170,25 +168,20 @@ onDocumentMouseDown = (event) ->
     return
 
   # intersect for stone placement
-  intersects = raycaster.intersectObjects($.points)
+  intersects = raycaster.intersectObjects($.point_spheres)
 
   if intersects.length > 0
-    $.pos = pos = [intersects[0].object.position.x, intersects[0].object.position.y, intersects[0].object.position.z]
-    point_id = [pt.point_id for pt in game.board.points when pt.pos[0] == pos[0] && pt.pos[1] == pos[1] && pt.pos[2] == pos[2]][0][0]
-    share.playStone(game, point_id)
+    pos = [intersects[0].object.position.x, intersects[0].object.position.y, intersects[0].object.position.z]
+    share.playStone(game, $.pos_to_id[pos])
 
 
 # add a black stone
-addBlackStone = (size, x, y, z) ->
-  material = new THREE.MeshPhongMaterial({specular: 0x666666, color: 0x333333, emissive: 0x000000, shininess: 20})
-  sphere = getSphere(size, x, y, z, material)
-  $.stone_spheres.push(sphere)
-  $.graph.add(sphere)
+addStone = (color, size, x, y, z) ->
+  if color == "black"
+    material = new THREE.MeshPhongMaterial({specular: 0x666666, color: 0x333333, emissive: 0x000000, shininess: 20})
+  else if color == "white"
+    material = new THREE.MeshPhongMaterial({specular: 0xFFFFFF, color: 0xBBBBBB, emissive: 0x444444, shininess: 40})
 
-
-# add a white stone
-addWhiteStone = (size, x, y, z) ->
-  material = new THREE.MeshPhongMaterial({specular: 0xFFFFFF, color: 0xBBBBBB, emissive: 0x444444, shininess: 40})
   sphere = getSphere(size, x, y, z, material)
   $.stone_spheres.push(sphere)
   $.graph.add(sphere)
@@ -210,8 +203,5 @@ $.updateStones = () ->
       continue
 
     id = stone.point_id
-    pos = [pt.pos for pt in game.board.points when pt.point_id == id][0][0]
-    if stone.player == 'black'
-      addBlackStone(game.board.stone_radius, pos[0], pos[1], pos[2])
-    else
-      addWhiteStone(game.board.stone_radius, pos[0], pos[1], pos[2])
+    pos = game.board.points[stone.point_id].pos
+    addStone(stone.player, game.board.stone_radius, pos[0], pos[1], pos[2])
