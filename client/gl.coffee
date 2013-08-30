@@ -1,5 +1,5 @@
-# initialization
-window.onload = () ->
+# initialize renderer & draph initial graph
+$.initScene = (game) ->
   $.container = $('#glContainer')
   $.WIDTH = $.container.width()
   $.HEIGHT = $.container.height()
@@ -73,23 +73,6 @@ window.onload = () ->
 
   # start
   $.animate()
-
-# rendering loop <- probably overkill
-$.animate = () ->
-  requestAnimationFrame($.animate)
-  $.renderer.render($.scene, $.camera)
-  $.controls.update()
-
-#  $.renderer.clear()
-#  if $.composer
-#    alert(1)
-#    $.composer.render()
-
-
-# draph initial graph
-$.initScene = (game) ->
-  if ! $.scene
-    return
   
   $.graph = new THREE.Object3D();
   $.scene.add($.graph);
@@ -115,6 +98,22 @@ $.initScene = (game) ->
 
   # draw existing stones
   $.updateStones()
+
+# empty scene
+$.clearScene = () ->
+  $('#glContainer').empty()
+
+# rendering loop <- probably overkill
+$.animate = () ->
+  requestAnimationFrame($.animate)
+  $.renderer.render($.scene, $.camera)
+  $.controls.update()
+
+#  $.renderer.clear()
+#  if $.composer
+#    alert(1)
+#    $.composer.render()
+
   
 
 # return a point

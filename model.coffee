@@ -26,14 +26,25 @@ share.clickStone = (game, point_id) ->
 
 
 share.playerResign = (game, player) ->
+  if game.state != "active"
+    return false
+
   game.score.winner = share.otherPlayer(player)
   game.score.score = -1
 
   $.Games.update(game._id, {$set: {state: "completed", score: game.score}})
 
+  # updatePlayerRecords
+
 
 share.pass = (game) ->
-  return false
+  if game.state != "active" && game.state != "pass"
+    return false
+
+  if game.state == "pass"
+    $.Games.update(game._id, {$set: {state: "scoring"}})
+  else
+    $.Games.update(game._id, {$set: {state: "pass", current_turn:share.otherPlayer(game.current_turn)}})
 
 
 share.undoLastMove = (game) ->

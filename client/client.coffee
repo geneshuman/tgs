@@ -13,6 +13,8 @@ $.currentGame = () ->
 
 # is current turn
 $.isCurrentTurn = (user) ->
+  if not user
+    user = Meteor.user()
   if $.observingGame()
     return false
 
@@ -81,8 +83,11 @@ completeGame = (game) ->
   else
     str = game.score.winner + " wins by " + game.score.score + " points"
 
-  if alert(str)
-    Session.set("current_game_id", null)
+  alert(str)
+
+  Session.set("current_game_id", null)
+  $.clearScene()
+  board_initialized = false
 
 # account config
 Accounts.config({

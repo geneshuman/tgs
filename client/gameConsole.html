@@ -24,9 +24,14 @@
     </div>
   </div>
   <div id="actions">
+    {{#if isState "scoring"}}
+    <div id="numMoves" style="width:170px">Select dead groups</div>
+    <button class="buttonRedBox" id="doneButton">Done</buttonm>    
+    {{else}}
     <div id="numMoves">{{numMoves}}&nbsp;moves</div>
     {{#unless observing_game}}
-    <button class="buttonOrangeBox" id="undoButton">Undo</button><button class="buttonOrangeBox" id="passButton">Pass</button><button class="buttonRedBox" id="resignButton">Resign</buttonm>    
+    <button class="buttonOrangeBox" id="undoButton">Undo</button><button class="buttonOrangeBox" id="passButton">Pass</button><button class="buttonRedBox" id="resignButton">Resign</button>    
     {{/unless}}
+    {{/if}}
   </div>
 </template>
