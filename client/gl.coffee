@@ -66,7 +66,6 @@ $.initScene = (game) ->
   # $.composer.addPass(effectFXAA);
   # $.composer.render()
 
-
   # aux data
   $.point_spheres = []
   $.stone_spheres = []
@@ -98,9 +97,6 @@ $.initScene = (game) ->
 
       edge = new THREE.Line(geometry, line_material)
       $.graph.add(edge)    
-
-  # draw existing stones
-  $.updateStones()
 
   # start
   animate()

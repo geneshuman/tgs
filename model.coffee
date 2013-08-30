@@ -2,7 +2,7 @@
 # Game
 #
 
-share.playStone = (game, point_id) ->
+share.playStone = (game, point_id, noupdate=false) ->
   # CHECK IF MOVE IS VALID - can't be occupied, KO, or suicide, game state is correct
   if game.state != "active" && game.state != "pass"
     return false
@@ -16,6 +16,8 @@ share.playStone = (game, point_id) ->
   game.stones.push(stone)
 
   # update groups
+  if noupdate
+    return
 
   $.Games.update(game._id, {$set: {stones: game.stones, current_turn: share.otherPlayer(game.current_turn)}})
 
