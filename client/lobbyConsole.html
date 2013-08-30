@@ -1,13 +1,5 @@
 <template name="lobbyConsole">
-  {{#unless anyGames}}
-  <h3>
-    No Active Games
-  </h3>
-  {{else}}
-  <h3>
-    Active Games
-  </h3>
-
+  {{#if anyGames}}
   <div id="gamesList">
     <table>
       <tr>
@@ -31,7 +23,7 @@
       {{/each}}
     </table>
   </div>
-  {{/unless}}
+  {{/if}}
   {{#if currentUser}}
   <br/>
   <button class="orangeButton" id="showNewGameButton" onclick="$(this).hide();$('#newGameDialog').show();">New Game</button>
