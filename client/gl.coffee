@@ -77,31 +77,32 @@ $.initScene = (game) ->
   $.graph = new THREE.Object3D();
   $.scene.add($.graph);
 
-  # draw dots
-  for point in game.board.points
-    pt = getPoint(0.65 * game.board.stone_radius, point.pos[0], point.pos[1], point.pos[2])
+  # draw dots & edges
+  for id, point of game.board.points
+    p0 = point.pos
+    pt = getPoint(0.65 * game.board.stone_radius, p0[0], p0[1], p0[2])
     $.graph.add(pt)
     $.points.push(pt)
+    
+    # edges    
+    for neighbor in point.neighbors
+      p1 = game.board.points[neighbor].pos
 
-  # draw edges
-  material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 2})
-  for edge in game.board.edges
-    p0 = (p.pos for p in game.board.points when p.point_id == edge.connection[0])[0]
-    p1 = (p.pos for p in game.board.points when p.point_id == edge.connection[1])[0]
-  
-    geometry = new THREE.Geometry()
-    geometry.vertices.push( new THREE.Vector3(p0[0], p0[1], p0[2]) );
-    geometry.vertices.push( new THREE.Vector3(p1[0], p1[1], p1[2]) );
+      geometry = new THREE.Geometry()
+      geometry.vertices.push( new THREE.Vector3(p0[0], p0[1], p0[2]) );
+      geometry.vertices.push( new THREE.Vector3(p1[0], p1[1], p1[2]) );
 
-    edge = new THREE.Line(geometry, material)
-    $.graph.add(edge)
+      edge = new THREE.Line(geometry, material)
+      $.graph.add(edge)    
 
   # draw existing stones
-  $.updateStones()
+#  $.updateStones()
+
 
 # empty scene
 $.clearScene = () ->
   $('#glContainer').empty()
+
 
 # rendering loop <- probably overkill
 $.animate = () ->

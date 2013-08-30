@@ -42,6 +42,11 @@ class Board
     @nodes.select{|n| n.x == x && n.y == y && n.z == z}.first
   end
 
+  def neighbors(n)
+    (@edges.select{|e| e.n0 == n}.map{|e| e.n1} +
+     @edges.select{|e| e.n1 == n}.map{|e| e.n0}).uniq
+  end
+
   def normalize()
     min_x = @nodes.map{|n| n.x}.min
     min_y = @nodes.map{|n| n.y}.min
@@ -71,20 +76,22 @@ class Board
   end
 
   def write()
-    str = "
-{
+    str = "{
   \"name\": \"#{@name}\",
   \"stone_radius\": #{0.3 * @scale},
   \"scale\": {
     \"lll\": [-1,-1,-1],
     \"uuu\": [1,1,1]
   },
-  \"points\": [
+  \"points\": {
 "
-    str += @nodes.map{|n| "{\n\"point_id\":#{n.id},\n\"pos\":[#{n.x},#{n.y},#{n.z}]\n}"}.join(",\n")
-    str += "],\n\"edges\": [\n"
-    str += @edges.map{|e| "{\n\"edge_id\":#{e.id},\n\"connection\":[#{e.n0.id},#{e.n1.id}]\n}"}.join(",\n")
-    str +="\n]\n}"
+    str += @nodes.map do |n| 
+      "\n\"#{n.id}\":{\n\"pos\":[#{n.x},#{n.y},#{n.z}],\n\"neighbors\":[#{neighbors(n).map{|c| c.id}.join(',')}]\n}"
+    end.join(",\n")
+
+ #   str += "],\n\"edges\": [\n"
+#    str += @edges.map{|e| "{\n\"edge_id\":#{e.id},\n\"connection\":[#{e.n0.id},#{e.n1.id}]\n}"}.join(",\n")
+    str +="\n}\n}"
     
     File.open(@name + ".json", 'w'){|f| f.write(str)}
   end
