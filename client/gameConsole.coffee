@@ -1,3 +1,19 @@
+undo = () ->
+  alert(1)
+  if !$.isCurrentTurn()
+    return
+
+pass = () ->
+  if !$.isCurrentTurn()
+    return
+
+resign = () ->
+  game = $.currentGame()
+  if game.state == "active" && confirm("Are you sure you want to resign?")
+    share.playerResign(game, $.userColor())
+
+
+# TEMPLATES
 Template.gameConsole.blackName = () ->
   game = $.currentGame()
   player = Meteor.users.find({_id: game.players.black}).fetch()[0]
@@ -27,3 +43,16 @@ Template.gameConsole.currentTurnIs = (player) ->
 
 Template.gameConsole.numMoves = () ->
   $.currentGame().stones.length
+
+Template.gameConsole.helpers {
+  observingGame: () ->
+    $.observingGame()
+  }
+
+
+Template.gameConsole.events {
+  'click #undoButton': undo,
+  'click #passButton': pass,
+  'click #resignButton': resign
+}
+

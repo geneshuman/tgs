@@ -10,33 +10,42 @@ $.currentGame = () ->
     return null
   $.Games.find({_id: id}).fetch()[0]
 
+
 # is current turn
 $.isCurrentTurn = (user) ->
-  if Session.get("observing_game")
-    return false 
-  game = $.currentGame()
-  for color, id of game.players
-    if id == user._id
-      return color == game.current_turn     
+  if $.observingGame()
+    return false
 
-# all games a user(logged in or not) can see
-$.availableGames = () ->
-  if Meteor.user()
-    $.Games.find().fetch()
+  game = $.currentGame()
+  return game.players[game.current_turn] == user._id
+
+
+$.userColor = () ->
+  game = $.currentGame()
+  if game.players["black"] == Meteor.user()._id
+    return "black"
+  else if game.players["white"] == Meteor.user()._id
+    return "white"
   else
-    _.filter $.Games.find().fetch(), (game) ->
-      game.players.white && game.players.black
+    return null
+
+
+$.observingGame = () ->
+  false && Session.get("observing_game")
 
 
 Template.console.username = () ->  
   Meteor.user().username
 
+
 Template.console.currentGame = () ->
   $.currentGame()
+
 
 Template.console.events {
   'click .logout': () -> Meteor.logout()
 }
+
 
 # startup
 Meteor.startup () ->
@@ -53,7 +62,27 @@ Meteor.startup () ->
 
     $.Games.find({_id: game._id}).observeChanges {changed: (id, fields) ->
       $.updateStones()
+      handleStateChange()
     }
+
+handleStateChange = () ->
+  game = $.currentGame()
+  if game.state == "completed"
+    completeGame(game)
+
+
+completeGame = (game) ->
+  str = game.score.winner + " wins"
+
+  if game.score.score == -1
+    str = game.score.winner + " wins by resignation"
+  else if game.winner == "tie"
+    str = "Tie game"
+  else
+    str = game.score.winner + " wins by " + game.score.score + " points"
+
+  if alert(str)
+    Session.set("current_game_id", null)
 
 # account config
 Accounts.config({

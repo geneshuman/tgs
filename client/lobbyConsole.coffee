@@ -1,3 +1,11 @@
+# all games a user(logged in or not) can see
+availableGames = () ->
+  if Meteor.user()
+    $.Games.find().fetch()
+  else
+    _.filter $.Games.find().fetch(), (game) ->
+      game.players.white && game.players.black
+
 # function to create a new game
 newGame = () ->
   name = $('#selectBoard').val()
@@ -11,7 +19,7 @@ newGame = () ->
     },
     current_turn: 'black',
     stones: [],
-    status: "awaitingPlayer", # awaitingPlayer -> active -> requestUndo -> pass -> scoring -> completed
+    state: "awaitingPlayer", # awaitingPlayer -> active -> requestUndo -> pass -> scoring -> completed
     captures: {
       black: 0,
       white: 0
@@ -34,7 +42,7 @@ joinGame = (event) ->
     players.black = Meteor.user()._id
   else
     players.white = Meteor.user()._id
-  $.Games.update({_id: id}, {$set: {players: players}})
+  $.Games.update({_id: id}, {$set: {players: players, state: 'active'}})
   Session.set("current_game_id", game._id)
 
 # observe an existing game
@@ -43,11 +51,10 @@ observeGame = (event) ->
   game = $.Games.find({_id: id}).fetch()[0]
   Session.set("current_game_id", game._id)
   Session.set("observing_game", true)
-
   
 # Templates
 Template.lobbyConsole.availableGames = () ->
-  $.availableGames()
+  availableGames()
 
 Template.lobbyConsole.username = () ->  
   Meteor.user().username
@@ -55,15 +62,9 @@ Template.lobbyConsole.username = () ->
 Template.lobbyConsole.boardTypes = () ->
   $.BoardTypes.find()
 
-Template.lobbyConsole.events {
-  'click #newGameButton': newGame,
-  'click .joinGame': joinGame,
-  'click .observeGame': observeGame,
-}
-
 Template.lobbyConsole.helpers {
   anyGames: () ->
-    $.availableGames().length != 0
+    availableGames().length != 0
 }
 
 Template.gameSummary.helpers {
@@ -83,4 +84,10 @@ Template.gameSummary.helpers {
     this.stones.length
   ,available: () ->
     !this.players.black || !this.players.white
+}
+
+Template.lobbyConsole.events {
+  'click #newGameButton': newGame,
+  'click .joinGame': joinGame,
+  'click .observeGame': observeGame,
 }

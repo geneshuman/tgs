@@ -25,6 +25,8 @@
   </div>
   <div id="actions">
     <div id="numMoves">{{numMoves}}&nbsp;moves</div>
+    {{#unless observing_game}}
     <button class="buttonOrangeBox" id="undoButton">Undo</button><button class="buttonOrangeBox" id="passButton">Pass</button><button class="buttonRedBox" id="resignButton">Resign</buttonm>    
+    {{/unless}}
   </div>
 </template>

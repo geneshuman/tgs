@@ -162,12 +162,12 @@ onDocumentMouseDown = (event) ->
     $.pos = pos = [obj.position.x, obj.position.y, obj.position.z]
     point_id = [pt.point_id for pt in game.board.points when pt.pos[0] == pos[0] && pt.pos[1] == pos[1] && pt.pos[2] == pos[2]][0][0]
 
-    share.captureStone(game, point_id)
+    share.clickStone(game, point_id)
     return
 
   # can only do things if it's your turn
-#  if not $.isCurrentTurn(Meteor.user())
-#    return
+  if not $.isCurrentTurn(Meteor.user())
+    return
 
   # intersect for stone placement
   intersects = raycaster.intersectObjects($.points)
