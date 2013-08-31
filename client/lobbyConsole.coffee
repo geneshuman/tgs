@@ -67,7 +67,7 @@ Template.lobbyConsole.username = () ->
   Meteor.user().username
 
 Template.lobbyConsole.boardTypes = () ->
-  $.BoardTypes.find()
+  $.BoardTypes.find({}, {sort: {name:1}})
 
 Template.lobbyConsole.helpers {
   anyGames: () ->

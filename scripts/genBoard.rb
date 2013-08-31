@@ -122,7 +122,7 @@ def genBoardNMK(n, m, k)
             c[idx] += ofs
             n1 = board.nodeAt(c[0], c[1], c[2])
             next if n0 == n1 || !n1 || board.connected?(n0, n1)
-            puts "#{n0.x} #{n0.y} #{n0.z} - #{n1.x} #{n1.y} #{n1.z}"
+            #puts "#{n0.x} #{n0.y} #{n0.z} - #{n1.x} #{n1.y} #{n1.z}"
             board.addEdge(n0, n1)
           end
         end
@@ -133,4 +133,12 @@ def genBoardNMK(n, m, k)
   board.normalize()
   board.write()
   board
+end
+
+
+def makeBoards()
+  boards = [[2,2,2],[3,3,3],[4,4,4],[5,5,5],[6,6,6],[7,7,7],[5,2,2],[6,2,2],[7,2,2],[5,2,3],[6,2,3],[7,2,3],[5,2,4],[7,2,4],[5,2,5],[7,2,7],[9,2,9],[5,3,3],[7,3,3],[9,3,3],[7,3,5],[5,3,5],[7,3,7],[9,3,9]]
+  boards.each do |board|
+    genBoardNMK(board[0], board[1], board[2])
+  end
 end
