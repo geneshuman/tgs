@@ -1,37 +1,70 @@
 <template name="gameConsole">
-  <div id="players">
-    <div id="black" {{#if currentTurnIs "black"}}class="currentTurn"{{/if}}>
-      <img class="playerStone" src="stone_black.png">
-      <span class="playerName">
-	{{blackName}}
-      </span>
-      <br/>
-      <img class="captureStone" src="stone_white.png">
-      <span class="numCaptures">
-	{{numBlackCaptures}}&nbsp; prisoners
-      </span>
+  <div id="gameConsole">
+    <div id="players">
+      <table><tr>
+	  <td id="black" {{#if currentTurnIs "black"}}class="currentTurn"{{/if}}>
+	    <img class="playerStone" src="stone_black.png">
+	    <span class="playerName">
+	      {{blackName}}
+	    </span>
+	    <br/>
+	    <img class="captureStone" src="stone_white.png">
+	    <span class="numCaptures">
+	      {{numBlackCaptures}}&nbsp; prisoners
+	    </span>
+	  </td>
+	  <td id="white" {{#if currentTurnIs "white"}}class="currentTurn"{{/if}}>
+	    <img class="playerStone" src="stone_white.png">
+	    <span class="playerName">
+	      {{whiteName}}
+	    </span>
+	    <br/>
+	    <img class="captureStone" src="stone_black.png">
+	    <span class="numCaptures">
+	      {{numWhiteCaptures}}&nbsp; prisoners
+	    </span>
+	  </td>
+      </tr></table>
     </div>
-    <div id="white" {{#if currentTurnIs "white"}}class="currentTurn"{{/if}}>
-      <img class="playerStone" src="stone_white.png">
-      <span class="playerName">
-	{{whiteName}}
-      </span>
-      <br/>
-      <img class="captureStone" src="stone_black.png">
-      <span class="numCaptures">
-	{{numWhiteCaptures}}&nbsp; prisoners
-      </span>
+    <div id="status">
+      {{ gameStatus }}
+      <div id="numMoves">{{numMoves}}&nbsp;moves</div>
     </div>
-  </div>
-  <div id="actions">
-    {{#if isState "scoring"}}
-    <div id="numMoves" style="width:170px">Select dead groups</div>
-    <button class="buttonRedBox" id="doneButton">Done</buttonm>    
-    {{else}}
-    <div id="numMoves">{{numMoves}}&nbsp;moves</div>
-    {{#unless observing_game}}
-    <button class="buttonOrangeBox" id="undoButton">Undo</button><button class="buttonOrangeBox" id="passButton">Pass</button><button class="buttonRedBox" id="resignButton">Resign</button>    
+    {{#unless observingGame}}
+    <div id="actions">
+      {{#if isState "scoring"}}
+      <button class="buttonRedBox" id="doneButton">Done</button>    
+      {{else}}    
+      <button class="buttonOrangeBox" id="undoButton">Undo</button><button class="buttonOrangeBox" id="passButton">Pass</button><button class="buttonRedBox" id="resignButton">Resign</button>      
+      {{/if}}
+    </div>
     {{/unless}}
-    {{/if}}
   </div>
+  {{> chatWindow }}
+</template>
+
+<template name="chatWindow">
+  <div id="chatWindow">
+    <table>
+      {{#each chats}}
+      {{> chat}}
+      {{/each}}
+    </table>
+  </div>
+  {{#if loggedIn }}
+  <div id="chatInput">
+    <input type="text" id="chatText"/>
+  </div>
+  {{/if}}
+</template>
+
+<template name="chat">
+  <tr>
+    <td style="padding:5px;width:60px;">
+      <b>{{ username }}:</b>
+    </td>
+    <td style="padding:5px;">
+      {{ chat }}
+    </td>
+  </tr>
 </template>

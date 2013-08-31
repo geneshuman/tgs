@@ -1,17 +1,38 @@
-chat - observer & players
-reconnect timeout
-quit game if reload client + timeout
+#### DONE ####
 scoring algorithm
 track wins & losses
-sortable games list
-select starting color
 gameconsole button layout
+reenable observers
+chat - observer & players
 
 
+#### FOR RELEASE ####
+reconnect timeout
+quit game if reload client + timeout
+
+feedback
+
+improved logo
+joined game/stone played sounds
+
+
+#### 1.0 ####
+help/about
+select starting color
+accept/reject games
+hover to show wins/losses
 player profile
 time
 prettier alerts
+sortable games list
+history navigation
 
+
+#### 2.0 ####
+challenges/user list
 optimize rendering
 hover/shift to show point_ids
 komi
+mobile
+board preview
+board creator

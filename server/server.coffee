@@ -4,7 +4,8 @@ Connections = new Meteor.Collection("connections")
 
 Meteor.startup () ->
   Connections.remove({})
-  share.Games.remove({})
+#  share.Games.remove({})
+#  Meteor.users.remove({})
 
   # load boards from server
   BoardTypes.remove({})
@@ -30,7 +31,7 @@ Meteor.methods {
 # server code: clean up dead clients after 60 seconds
 Meteor.setInterval((() ->
   now = (new Date()).getTime()
-  Connections.find({last_seen: {$lt: (now - 10 * 1000)}}).fetch().forEach (con) ->
+  Connections.find({last_seen: {$lt: (now - 60 * 1000)}}).fetch().forEach (con) ->
     game = share.Games.findOne({_id: con.game_id})
     user = Meteor.users.findOne({_id: con.user_id})
     console.log "missing user", game._id, user._id
@@ -45,5 +46,11 @@ Meteor.setInterval((() ->
 
 
 
+# account config
+Accounts.config({
+  sendVerificationEmail: true
+})
 
-
+Accounts.onCreateUser (options, user) ->
+  user.profile = {record: {wins:0, losses:0}}
+  return user

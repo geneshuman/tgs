@@ -132,14 +132,13 @@ share.computeScore = (game) ->
   # flood fill to compute score
   unocc = {}
   for pt in _.keys(game.board.points)
-    if !game.occupied_points[point_id]
+    if !game.occupied_points[pt]
       unocc[pt] = true
-  
+
   regions = []
 
   # recursively fill a region
   floodFill = (region, unexp) ->
-  
     # nothing more to explore
     if _.size(unexp) == 0
       return
@@ -159,7 +158,7 @@ share.computeScore = (game) ->
       if game.occupied_points[point_id]
         player = game.groups[game.occupied_points[point_id]].player
         if not region.owner
-          region.owner == player
+          region.owner = player
         else if region.owner != player
           region.owner = "dame"
       else
@@ -206,5 +205,45 @@ share.computeScore = (game) ->
     game.score.winner = "white"
 
   game.score.score = Math.abs(b_total - w_total)
+
+  # black
+  black = Meteor.users.findOne({_id: game.players.black})
+  if not black.profile.record[game.board.name]
+    black.profile.record[game.board.name] = {
+      wins: 0,
+      losses: 0,
+      played: []
+    }
+
+  if game.score.winner == "black"
+    black.profile.record[game.board.name].wins += 1
+    black.profile.record.wins += 1
+  else if game.score.winner == "white"
+    black.profile.record[game.board.name].losses += 1
+    black.profile.record.losses += 1
+  black.profile.record[game.board.name].played.push(game._id)
+
+  Meteor.users.update(Meteor.userId(), {$set: {"profile.record": black.profile.record}})
+
+  # white
+  white = Meteor.users.findOne({_id: game.players.white})
+
+  if not white.profile.record[game.board.name]
+    white.profile.record[game.board.name] = {
+      wins: 0,
+      losses: 0,
+      played: []
+    }
+
+  if game.score.winner == "white"
+    white.profile.record[game.board.name].wins += 1
+    white.profile.record.wins += 1
+  else if game.score.winner == "black"
+    white.profile.record[game.board.name].losses += 1
+    white.profile.record.losses += 1
+  white.profile.record[game.board.name].played.push(game._id)
+
+  Meteor.users.update(game.players.white, {$set: {"profile.record": white.profile.record}})
+
 
   return game.score

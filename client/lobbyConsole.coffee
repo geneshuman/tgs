@@ -16,11 +16,11 @@ newGame = () ->
     boardType: name,
     players: {
       black: Meteor.user()._id,
-      white: Meteor.user()._id
+      white: null #Meteor.user()._id
     },
     current_turn: 'black',
     stones: [],
-    state: "active", # awaitingPlayer -> active -> requestUndo -> pass -> scoring -> completed
+    state: "awaitingPlayer", # awaitingPlayer -> active -> requestUndo -> pass -> scoring -> partialDoneScoring -> completed
     captures: {
       black: 0,
       white: 0
@@ -34,7 +34,9 @@ newGame = () ->
     occupied_points:{},
     ko_points:[],
     groups:{},
-    board: board
+    board: board,
+    player_chats: [],
+    observer_chats: []
   }
   id = $.Games.insert(game)
   Session.set("current_game_id", id)
@@ -93,6 +95,15 @@ Template.gameSummary.helpers {
     this.stones.length
   ,available: () ->
     !this.players.black || !this.players.white
+  ,gameRecord: (game_id, player) ->
+    game = $.Games.findOne(game_id)
+    u = Meteor.users.find({_id:game.players[player]}).fetch()[0]
+    if not u
+      return ""
+    #console.log u
+    w = u.profile.record.wins
+    l = u.profile.record.losses
+    "#{w} wins/ #{l} losses (#{Math.round(100.0 * w/(w+l))}%)"
 }
 
 Template.lobbyConsole.events {

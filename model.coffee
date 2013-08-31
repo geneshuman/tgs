@@ -84,15 +84,13 @@ share.undo = (game) ->
 
 # player is done scoring
 share.done = (game) ->
-  alert("done")
   if game.state == "scoring"
     #$.Games.update(game._id, {$set: {state: "partialDoneScoring"}})
     score = share.computeScore(game)
     $.Games.update(game._id, {$set: {score: game.score, state: "completed"}})
-    #$.Games.update(Session.get("current_game_id"), {$set: {state: "crabby"}})
-    #$.Games.update(game._id, {$set: {state: "computingScore"}})
-  else if game.state == "partialDoneScoring"    
-    $.Games.update(game._id, {$set: {state: "computingScore"}})
+  else if game.state == "partialDoneScoring"
+    score = share.computeScore(game)
+    $.Games.update(game._id, {$set: {score: game.score, state: "completed"}})
 
 
 # depending on game state, do something

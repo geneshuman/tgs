@@ -1,6 +1,8 @@
 #console{
     padding:0px;
     margin:0px;
+    height:100%;
+    position:relative;    
 }
 
 #console #title{
@@ -69,21 +71,19 @@ a#titleDropDown{
    text-decoration:none;
 }
 
+#gameConsole{
+    position:relative;
+}
 
 #players #black{
     width:50%;
-    border:solid 1px black;
-    border-left:solid 1px white;
-    float:left;
     height:100px;
+    border-bottom:solid 1px black;
 }
 
 #players #white{
-    width:50%;
-    border:solid 1px black;
-    border-left:solid 1px white;
-    border-right:solid 1px white;
-    margin-left:50%;
+    border-left:solid 1px black;
+    border-bottom:solid 1px black;
     height:100px;
 }
 
@@ -121,10 +121,36 @@ a#titleDropDown{
 
 #numMoves{
     display:inline-block;
-    width:84px;
     margin-left:5px;
+    float:right;
 }
 
 #actions{
     border-bottom:solid 1px black;
+}
+
+#status{
+    border-bottom:solid 1px black;
+    padding:7px;
+    background-color:#ECA;
+}
+
+#chatWindow{
+  overflow-y:scroll;
+}
+
+#chatInput{
+    padding:3px;
+}
+
+#chatInput input{
+    padding: 4px;
+    border: 1px solid #999;
+    border-radius: 3px;
+    line-height: 1;
+    height: auto;
+    box-sizing: border-box;
+    width: 100%;
+    background-color: white;
+    -webkit-appearance: textfield;
 }

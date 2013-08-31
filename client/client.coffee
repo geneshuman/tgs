@@ -41,7 +41,7 @@ $.userColor = (user) ->
 
 # is the game being observed or played
 $.observingGame = () ->
-  false && Session.get("observing_game")
+  Session.get("observing_game")
 
 
 # top level interaction
@@ -83,9 +83,12 @@ Meteor.startup () ->
       # game aux data
       share.initClientAuxData(game)
 
+      # size chat window
+      $.sizeChatWindow()
+
     # game change observers
     $.Games.find({_id: game._id}).observe {changed: (new_doc, old_doc) ->
-      console.log new_doc.state, old_doc.state
+      #console.log new_doc.state, old_doc.state
       $.updateStones()
       if old_doc.state != new_doc.state
         handleStateChange(new_doc, old_doc)
@@ -125,25 +128,20 @@ completeGame = (game) ->
   else   
     str = game.score.winner + " wins by " + game.score.score + " points"
 
-  alert(str)
+  alert(str)  
 
   Session.set("current_game_id", null)
   $.clearScene()
   board_initialized = false
 
 
+# account ui config
+Accounts.ui.config({
+  passwordSignupFields: 'USERNAME_AND_EMAIL'
+})
+
 # keep alive code
 Meteor.setInterval((() ->
   if $.currentGame()
     Meteor.call('keepalive', Meteor.userId(), Session.get("current_game_id"))),
   2500)
-
-# account config
-Accounts.config({
-  sendVerificationEmail: true
-})
-
-Accounts.ui.config({
-  passwordSignupFields: 'USERNAME_AND_EMAIL'
-})
-

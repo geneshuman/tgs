@@ -48,3 +48,7 @@ a{text-decoration:none}
     border:solid 1px black;
     background-color:white;
 }
+
+.hover{
+    cursor:pointer;
+}
