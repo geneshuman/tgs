@@ -31,6 +31,11 @@ class Board
     @nodes << Node.new(x,y,z,@nodes.length)
   end
 
+  def removeNode(n)
+    @nodes.delete(n)
+    @edges = @edges.reject{|e| e.n0==n || e.n1==n}
+  end
+
   def addEdge(n0, n1)
     return if connected?(n0, n1) || n0 == n1
     @edges << Edge.new(n0, n1, @edges.length)
@@ -101,7 +106,7 @@ class Board
 end
 
 
-def genBoardNMK(n, m, k)
+def genBoardNMK(n, m, k, no_write=false)
   board = Board.new("#{n}x#{m}x#{k}")
 
   (0...n).each do |x|
@@ -130,15 +135,44 @@ def genBoardNMK(n, m, k)
     end
   end
 
-  board.normalize()
-  board.write()
+  if !no_write
+    board.normalize()
+    board.write()
+  end
+
   board
 end
 
+def genBoardNMKs(n, m, k, s, no_write=false)
+  board = genBoardNMK(n,m,k,true)
+
+  (s...n-s).each do |x|
+    (s...m-s).each do |y|
+      (s...k-s).each do |z|
+        n0 = board.nodeAt(x, y, z)
+        board.removeNode(n0)
+      end
+    end
+  end
+
+  board.name = "#{n}x#{m}x#{k}s#{s}"
+
+  if !no_write
+    board.normalize()
+    board.write()
+  end
+  board
+end
 
 def makeBoards()
   boards = [[2,2,2],[3,3,3],[4,4,4],[5,5,5],[6,6,6],[7,7,7],[5,2,2],[6,2,2],[7,2,2],[5,2,3],[6,2,3],[7,2,3],[5,2,4],[7,2,4],[5,2,5],[7,2,7],[9,2,9],[5,3,3],[7,3,3],[9,3,3],[7,3,5],[5,3,5],[7,3,7],[9,3,9]]
   boards.each do |board|
     genBoardNMK(board[0], board[1], board[2])
+  end
+
+  boards = [[4,4,4,1],[5,5,5,1],[6,6,6,1],[7,7,7,1],[5,5,5,2],[6,6,6,2],[7,7,7,2],[7,7,7,3]]
+
+  boards.each do |board|
+    genBoardNMKs(board[0], board[1], board[2], board[3])
   end
 end

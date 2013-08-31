@@ -51,8 +51,8 @@ $.initScene = (game) ->
   $.container[0].addEventListener('mousedown', onDocumentMouseDown, false)
 
   # anialiasing?
-  $.composer = new THREE.EffectComposer($.renderer)
-  $.composer.addPass(new THREE.RenderPass($.scene, $.camera))
+#  $.composer = new THREE.EffectComposer($.renderer)
+#  $.composer.addPass(new THREE.RenderPass($.scene, $.camera))
 
   # aux data
   $.point_spheres = []
@@ -64,7 +64,7 @@ $.initScene = (game) ->
   $.graph = new THREE.Object3D();
   $.scene.add($.graph);
   
-  line_material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 1})
+  line_material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 2})
 
   for id, point of game.board.points
     p0 = point.pos

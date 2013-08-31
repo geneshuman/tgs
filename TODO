@@ -4,19 +4,19 @@ track wins & losses
 gameconsole button layout
 reenable observers
 chat - observer & players
+quit game if reload client + timeout
+joined game/stone played sounds
+test in other browsers
 
 
 #### FOR RELEASE ####
-reconnect timeout
-quit game if reload client + timeout
-
 feedback
 
 improved logo
-joined game/stone played sounds
 
 
 #### 1.0 ####
+reconnect timeout
 help/about
 select starting color
 accept/reject games

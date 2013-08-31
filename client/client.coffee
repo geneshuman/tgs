@@ -88,7 +88,10 @@ Meteor.startup () ->
 
     # game change observers
     $.Games.find({_id: game._id}).observe {changed: (new_doc, old_doc) ->
-      #console.log new_doc.state, old_doc.state
+      if new_doc.stones.length > old_doc.stones.length
+        $('#click')[0].volume = 0.3
+        $('#click')[0].play()
+  
       $.updateStones()
       if old_doc.state != new_doc.state
         handleStateChange(new_doc, old_doc)
@@ -98,7 +101,10 @@ Meteor.startup () ->
 # handle game state changes
 handleStateChange = (new_doc, old_doc) ->
   game = $.currentGame()
-  if new_doc.state == "completed"    
+  console.log new_doc.state, old_doc.state
+  if new_doc.state == "active" && old_doc.state == "awaitingPlayer"
+    $('#join_chime')[0].play()
+  else if new_doc.state == "completed"    
     completeGame(game)
   else if new_doc.state == "requestUndo"
     console.log "requestUndo"
