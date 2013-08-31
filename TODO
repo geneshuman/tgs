@@ -1,0 +1,17 @@
+chat - observer & players
+reconnect timeout
+quit game if reload client + timeout
+scoring algorithm
+track wins & losses
+sortable games list
+select starting color
+gameconsole button layout
+
+
+player profile
+time
+prettier alerts
+
+optimize rendering
+hover/shift to show point_ids
+komi

@@ -57,6 +57,7 @@ $.initScene = (game) ->
   # aux data
   $.point_spheres = []
   $.stone_spheres = []
+  $.marker_spheres = []
   $.pos_to_id = {}
 
   # draw dots & edges
@@ -68,9 +69,9 @@ $.initScene = (game) ->
   for id, point of game.board.points
     p0 = point.pos
 
-    c0 = Math.round(255 * (0.20 * 0.5 * (p0[0] + 1.0) + .3))
-    c1 = Math.round(255 * (0.20 * 0.5 * (p0[1] + 1.0) + .3))
-    c2 = Math.round(255 * (0.20 * 0.5 * (p0[2] + 1.0) + .3))
+    c0 = Math.round(255 * (0.30 * 0.5 * (p0[0] + 1.0) + .2))
+    c1 = Math.round(255 * (0.30 * 0.5 * (p0[1] + 1.0) + .2))
+    c2 = Math.round(255 * (0.30 * 0.5 * (p0[2] + 1.0) + .2))
     color = (2 << 15) * c0 + (2 << 7) * c1 + c2
     #point_material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: color, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
     point_material = new THREE.MeshPhongMaterial({specular: 0x888888, color: color, emissive: 0x444444, shininess: 20, transparent: true, opacity:0.7})
@@ -148,16 +149,16 @@ onDocumentMouseDown = (event) ->
   $.projector.unprojectVector( vector, $.camera )
   raycaster = new THREE.Raycaster( $.camera.position, vector.sub( $.camera.position ).normalize() )
 
-  # intersect for capturing stones
-#  intersects = raycaster.intersectObjects($.stone_spheres)
+  # intersect for clicking on groups
+  intersects = raycaster.intersectObjects(_.union($.stone_spheres, $.marker_spheres))
 
-#  if intersects.length > 0
-#    obj = intersects[0].object
-#    point_id = $.pos_to_id[[obj.position.x, obj.position.y, obj.position.z]]
-#    share.clickStone(game, point_id)
-#    return
+  if intersects.length > 0
+    obj = intersects[0].object
+    point_id = $.pos_to_id[[obj.position.x, obj.position.y, obj.position.z]]
+    share.clickStone(game, point_id)
+    return
 
-  # can only do things if it's your turn
+  # can only place stones if it's your turn
   if not $.isCurrentTurn(Meteor.user())
     return
 
@@ -177,6 +178,8 @@ addStone = (color, size, x, y, z) ->
     material = new THREE.MeshPhongMaterial({specular: 0xFFFFFF, color: 0xBBBBBB, emissive: 0x444444, shininess: 40})
   else if color == "ko"
     material = new THREE.MeshPhongMaterial({specular: 0xAAAAFF, color: 0x3333BB, emissive: 0x222244, shininess: 80})
+  else if color == "marker"
+    material = new THREE.MeshPhongMaterial({specular: 0xFFAAAA, color: 0xBB3333, emissive: 0x442222, shininess: 80, transparent: true, opacity:0.7})
 
   sphere = getSphere(size, x, y, z, material)
   $.stone_spheres.push(sphere)
@@ -191,7 +194,13 @@ $.updateStones = () ->
   for sphere in $.stone_spheres
     $.graph.remove(sphere)
 
-  $.stone_spheres = [] 
+  $.stone_spheres = []
+
+  # remove all markers
+  for sphere in $.marker_spheres
+    $.graph.remove(sphere)
+
+  $.marker_spheres = [] 
 
   # draw stones
   for stone in game.stones
@@ -206,3 +215,12 @@ $.updateStones = () ->
   for point_id in game.ko_points
     pos = game.board.points[point_id].pos
     addStone("ko", 0.8 * game.board.stone_radius, pos[0], pos[1], pos[2])
+
+  # draw marked stones
+  for id, group of game.groups
+    if !group.marked_dead
+      continue
+    for point_id in group.members
+      pos = game.board.points[point_id].pos
+      addStone("marker", 1.2 * game.board.stone_radius, pos[0], pos[1], pos[2])
+    

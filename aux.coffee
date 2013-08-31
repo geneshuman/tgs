@@ -113,3 +113,98 @@ share.updateAuxData = (game, point_id) ->
   Games.update(game._id, {$set: {}})
 
   return {dead_points: dead_points, groups: game.groups, occupied_points: game.occupied_points, ko_points: game.ko_points}
+
+
+# calculate the score
+share.computeScore = (game) ->
+  if game.score.winner
+    return game.score
+
+  # remove dead stones
+  for id, group of game.groups
+    if !group.marked_dead
+      continue
+
+    game.captures[share.otherPlayer(group.player)] += group.members.length
+    for point_id in group.members
+      delete game.occupied_points[point_id]
+
+  # flood fill to compute score
+  unocc = {}
+  for pt in _.keys(game.board.points)
+    if !game.occupied_points[point_id]
+      unocc[pt] = true
+  
+  regions = []
+
+  # recursively fill a region
+  floodFill = (region, unexp) ->
+  
+    # nothing more to explore
+    if _.size(unexp) == 0
+      return
+
+    # find an unexplored point
+    cur = _.keys(unexp)[0]
+    delete unexp[cur]
+
+    # iterate over it's neighbors
+    neighbors = game.board.points[cur].neighbors
+    for point_id in neighbors
+
+      # already taken care of
+      if region.members[point_id]
+        continue
+      
+      if game.occupied_points[point_id]
+        player = game.groups[game.occupied_points[point_id]].player
+        if not region.owner
+          region.owner == player
+        else if region.owner != player
+          region.owner = "dame"
+      else
+        unexp[point_id] = true
+        region.members[point_id] = true
+        region.size += 1
+        delete unocc[point_id]
+
+    floodFill(region, unexp)
+      
+  # start new regions
+  while _.size(unocc) != 0
+    cur = _.keys(unocc)[0]
+    delete unocc[cur]
+
+    current_region = {
+      owner: null,
+      members: {},
+      size: 1
+    }
+    current_region.members[cur] = true
+
+    regions.push(current_region)
+
+    floodFill(current_region, $.extend({}, current_region.members))
+
+  $.r = regions
+
+  # add regions
+  for region in regions
+    if region.owner == "black"
+      game.score.black += region.size
+    else if region.owner == "white"
+      game.score.white += region.size
+
+  # compute total
+  b_total = game.score.black + game.captures.black
+  w_total = game.score.white + game.captures.white
+
+  # compute winner
+  if b_total > w_total
+    game.score.winner = "black"
+  else if b_total < w_total
+    game.score.winner = "white"
+
+  game.score.score = Math.abs(b_total - w_total)
+
+  return game.score

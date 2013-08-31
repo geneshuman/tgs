@@ -66,6 +66,7 @@ share.playerResign = (game, player) ->
   # updatePlayerRecords
 
 
+# player passes
 share.pass = (game) ->
   if game.state != "active" && game.state != "pass"
     return false
@@ -76,7 +77,30 @@ share.pass = (game) ->
     Games.update(game._id, {$set: {state: "pass", current_turn:share.otherPlayer(game.current_turn)}})
 
 
+# player requests undo
+share.undo = (game) ->
+  $.Games.update(game._id, {$set: {state: "requestUndo"}})
 
+
+# player is done scoring
+share.done = (game) ->
+  alert("done")
+  if game.state == "scoring"
+    #$.Games.update(game._id, {$set: {state: "partialDoneScoring"}})
+    score = share.computeScore(game)
+    $.Games.update(game._id, {$set: {score: game.score, state: "completed"}})
+    #$.Games.update(Session.get("current_game_id"), {$set: {state: "crabby"}})
+    #$.Games.update(game._id, {$set: {state: "computingScore"}})
+  else if game.state == "partialDoneScoring"    
+    $.Games.update(game._id, {$set: {state: "computingScore"}})
+
+
+# depending on game state, do something
 share.clickStone = (game, point_id) ->
-  # depending on game status, do something
-  return false
+  if game.state != "scoring" && game.state != "partialDoneScoring"
+    return
+
+  group = game.groups[game.occupied_points[point_id]]
+  group.marked_dead = !group.marked_dead
+
+  Games.update(game._id, {$set: {groups: game.groups, state: "scoring"}})

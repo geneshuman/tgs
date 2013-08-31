@@ -1,6 +1,7 @@
+# EVENT HANDLERS
 undo = () ->
   if !$.isCurrentTurn() && $.history.length != 0
-    $.Games.update(Session.get("current_game_id"), {$set: {state: "requestUndo"}})
+    share.undo($.currentGame())
 
 
 pass = () ->
@@ -14,8 +15,13 @@ resign = () ->
     share.playerResign(game, $.userColor())
 
 
+player_finished = false
 doneScoring = () ->
-  return false
+  if player_finished
+    return
+  player_finished = true
+
+  share.done($.currentGame())
 
 
 # TEMPLATES
@@ -48,6 +54,7 @@ Template.gameConsole.numWhiteCaptures = () ->
 Template.gameConsole.currentTurnIs = (player) ->
   $.currentGame().current_turn == player
 
+
 Template.gameConsole.numMoves = () ->
   $.currentGame().stones.length
 
@@ -63,6 +70,6 @@ Template.gameConsole.events {
   'click #undoButton': undo,
   'click #passButton': pass,
   'click #resignButton': resign,
-  'click #doneScoringButton': doneScoring
+  'click #doneButton': doneScoring
 }
 

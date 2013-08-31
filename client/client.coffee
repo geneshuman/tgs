@@ -85,6 +85,7 @@ Meteor.startup () ->
 
     # game change observers
     $.Games.find({_id: game._id}).observe {changed: (new_doc, old_doc) ->
+      console.log new_doc.state, old_doc.state
       $.updateStones()
       if old_doc.state != new_doc.state
         handleStateChange(new_doc, old_doc)
@@ -94,7 +95,7 @@ Meteor.startup () ->
 # handle game state changes
 handleStateChange = (new_doc, old_doc) ->
   game = $.currentGame()
-  if new_doc.state == "completed"
+  if new_doc.state == "completed"    
     completeGame(game)
   else if new_doc.state == "requestUndo"
     console.log "requestUndo"
@@ -115,14 +116,13 @@ handleStateChange = (new_doc, old_doc) ->
 
 
 # game over logic
-completeGame = (game) ->
+completeGame = (game) ->  
   str = game.score.winner + " wins"
-
   if game.score.score == -1
     str = game.score.winner + " wins by resignation"
-  else if game.winner == "tie"
+  else if game.score.score == 0
     str = "Tie game"
-  else
+  else   
     str = game.score.winner + " wins by " + game.score.score + " points"
 
   alert(str)
