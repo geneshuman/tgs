@@ -1,3 +1,5 @@
+STONE_SIZE = 0.5
+
 class Node
   attr_accessor :x, :y, :z, :id
   def initialize(x,y,z,id)
@@ -78,7 +80,7 @@ class Board
   def write()
     str = "{
   \"name\": \"#{@name}\",
-  \"stone_radius\": #{0.3 * @scale},
+  \"stone_radius\": #{STONE_SIZE * @scale},
   \"scale\": {
     \"lll\": [-1,-1,-1],
     \"uuu\": [1,1,1]

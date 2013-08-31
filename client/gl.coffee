@@ -50,21 +50,9 @@ $.initScene = (game) ->
   $.projector = new THREE.Projector();
   $.container[0].addEventListener('mousedown', onDocumentMouseDown, false)
 
-  # antialiasing
-  # dpr = 1;
-  # if (window.devicePixelRatio != undefined)
-  #   dpr = window.devicePixelRatio;
-
-  # renderScene = new THREE.RenderPass($.scene, $.camera);
-  # effectFXAA = new THREE.ShaderPass(THREE.FXAAShader);
-  # effectFXAA.uniforms['resolution'].value.set(1 / ($.WIDTH * dpr), 1 / ($.HEIGHT * dpr));
-  # effectFXAA.renderToScreen = true;
-
-  # $.composer = new THREE.EffectComposer($.renderer);
-  # $.composer.setSize($.WIDTH * dpr, $.HEIGHT * dpr);
-  # $.composer.addPass(renderScene);
-  # $.composer.addPass(effectFXAA);
-  # $.composer.render()
+  # anialiasing?
+  $.composer = new THREE.EffectComposer($.renderer)
+  $.composer.addPass(new THREE.RenderPass($.scene, $.camera))
 
   # aux data
   $.point_spheres = []
@@ -75,16 +63,17 @@ $.initScene = (game) ->
   $.graph = new THREE.Object3D();
   $.scene.add($.graph);
   
-  line_material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 2})
+  line_material = new THREE.LineBasicMaterial({color: 0x334455, linewidth: 1})
 
   for id, point of game.board.points
     p0 = point.pos
 
-    c0 = Math.round(255 * (0.25 * (p0[0] + 1.0) + .2))
-    c1 = Math.round(255 * (0.25 * (p0[1] + 1.0) + .2))
-    c2 = Math.round(255 * (0.25 * (p0[2] + 1.0) + .2))
+    c0 = Math.round(255 * (0.30 * (p0[0] + 1.0) + .1))
+    c1 = Math.round(255 * (0.30 * (p0[1] + 1.0) + .1))
+    c2 = Math.round(255 * (0.30 * (p0[2] + 1.0) + .1))
     color = (2 << 15) * c0 + (2 << 7) * c1 + c2
-    point_material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: color, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
+    #point_material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: color, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
+    point_material = new THREE.MeshPhongMaterial({specular: 0x999999, color: color, emissive: 0x666666, shininess: 20, transparent: true, opacity:0.7})
     pt = getSphere(0.65 * game.board.stone_radius, p0[0], p0[1], p0[2], point_material)
     $.graph.add(pt)
     $.point_spheres.push(pt)
@@ -114,11 +103,13 @@ $.initScene = (game) ->
 $.clearScene = () ->
   $('#glContainer').empty()
 
+
 # resize
 onWindowResize = () ->
   $.camera.aspect = $.container.width() / $.container.height()
   $.renderer.setSize($.container.width(), $.container.height())
   $.camera.updateProjectionMatrix()
+
 
 # rendering loop <- probably overkill
 animate = () ->
@@ -126,18 +117,12 @@ animate = () ->
   $.renderer.render($.scene, $.camera)
   $.controls.update()
 
-#  $.renderer.clear()
-#  if $.composer
-#    alert(1)
-#    $.composer.render()
-
-
 
 # return a sphere
 getSphere = (size, x, y, z, material) ->
   radius = size
-  segments = 16
-  rings = 16
+  segments = 32
+  rings = 32
   sphere = new THREE.Mesh(
     new THREE.SphereGeometry(
       size,
