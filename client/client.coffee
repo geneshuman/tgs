@@ -55,7 +55,8 @@ Template.console.currentGame = () ->
 
 Template.console.events {
   'click .logout': () ->
-    share.playerResign($.currentGame(), $.userColor())
+    if $.currentGame()
+      share.playerResign($.currentGame(), $.userColor())
     Meteor.logout()
 }
 
@@ -132,7 +133,10 @@ completeGame = (game) ->
 
 
 # keep alive code
-Meteor.setInterval((() -> Meteor.call('keepalive', Meteor.userId(), Session.get("current_game_id"))), 5000)
+Meteor.setInterval((() ->
+  if $.currentGame()
+    Meteor.call('keepalive', Meteor.userId(), Session.get("current_game_id"))),
+  2500)
 
 # account config
 Accounts.config({

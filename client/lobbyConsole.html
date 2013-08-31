@@ -1,42 +1,44 @@
 <template name="lobbyConsole">
-  {{#if anyGames}}
-  <div id="gamesList">
-    <table>
-      <tr>
-	<th>
-	  Black
-	</th>
-	<th>
-	  White
-	</th>
-	<th>
-	  Board
-	</th>
-	<th>
-	  Turn
-	</th>
-	<th>
-	</th>
-      </tr>
-      {{# each availableGames}}
-      {{> gameSummary}}
-      {{/each}}
-    </table>
+  <div id="lobbyConsole">
+    {{#if anyGames}}
+    <div id="gamesList">
+      <table>
+	<tr>
+	  <th>
+	    Black
+	  </th>
+	  <th>
+	    White
+	  </th>
+	  <th>
+	    Board
+	  </th>
+	  <th>
+	    Turn
+	  </th>
+	  <th>
+	  </th>
+	</tr>
+	{{# each availableGames}}
+	{{> gameSummary}}
+	{{/each}}
+      </table>
+    </div>
+    {{/if}}
+    {{#if currentUser}}
+    <br/>
+    <button class="orangeButton" id="showNewGameButton" onclick="$(this).hide();$('#newGameDialog').show();">New Game</button>
+    <div id="newGameDialog" style="display:none;">
+      Board Type:
+      <select id="selectBoard">
+	{{# each boardTypes}}
+	{{> boardType}}
+	{{/each}}
+      </select><br/><br/>
+      <button id="newGameButton" class="orangeButton">Go!</button>
+    </div>
+    {{/if}}
   </div>
-  {{/if}}
-  {{#if currentUser}}
-  <br/>
-  <button class="orangeButton" id="showNewGameButton" onclick="$(this).hide();$('#newGameDialog').show();">New Game</button>
-  <div id="newGameDialog" style="display:none;">
-    Board Type:
-    <select id="selectBoard">
-      {{# each boardTypes}}
-      {{> boardType}}
-      {{/each}}
-    </select><br/><br/>
-    <button id="newGameButton" class="orangeButton">Go!</button>
-  </div>
-  {{/if}}
 </template>
 
 <template name="boardType">

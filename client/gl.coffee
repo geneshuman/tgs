@@ -68,12 +68,12 @@ $.initScene = (game) ->
   for id, point of game.board.points
     p0 = point.pos
 
-    c0 = Math.round(255 * (0.30 * 0.5 * (p0[0] + 1.0) + .3))
-    c1 = Math.round(255 * (0.30 * 0.5 * (p0[1] + 1.0) + .3))
-    c2 = Math.round(255 * (0.30 * 0.5 * (p0[2] + 1.0) + .3))
+    c0 = Math.round(255 * (0.20 * 0.5 * (p0[0] + 1.0) + .3))
+    c1 = Math.round(255 * (0.20 * 0.5 * (p0[1] + 1.0) + .3))
+    c2 = Math.round(255 * (0.20 * 0.5 * (p0[2] + 1.0) + .3))
     color = (2 << 15) * c0 + (2 << 7) * c1 + c2
     #point_material = new THREE.MeshPhongMaterial({specular: 0xAA0000, color: color, emissive: 0x660000, shininess: 30, transparent: true, opacity:0.7})
-    point_material = new THREE.MeshPhongMaterial({specular: 0x888888, color: color, emissive: 0x555555, shininess: 20, transparent: true, opacity:0.7})
+    point_material = new THREE.MeshPhongMaterial({specular: 0x888888, color: color, emissive: 0x444444, shininess: 20, transparent: true, opacity:0.7})
     pt = getSphere(0.65 * game.board.stone_radius, p0[0], p0[1], p0[2], point_material)
     $.graph.add(pt)
     $.point_spheres.push(pt)

@@ -19,7 +19,11 @@
       {{#unless currentUser}}
       {{loginButtons align="right"}}
       {{else}}
-      <a id="titleDropDown" class="logout" href="javascript:void(0)">{{username}}&nbsp;▾</a>
+      <a id="titleDropDown" href="javascript:void(0)" onmouseover="$('#userMenu').show()" onmouseout="$('#userMenu').hide()">{{username}}&nbsp;▾
+      <div id="userMenu" onmouseover="$('#userMenu').show()" onmouseout="$('#userMenu').hide()">
+	<a class="logout" href="javascript:void(0)">logout</a>
+      </div>
+      </a>
       {{/unless}}
       <img src="logo_small.png" />
       <h2>TGS</h2>

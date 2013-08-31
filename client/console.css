@@ -36,6 +36,11 @@
     text-align:center;
 }
 
+#gamesList{
+    max-height:600px;
+    overflow-y:scroll;
+}
+
 #showNewGameButton{
     margin-left:115px;
 }

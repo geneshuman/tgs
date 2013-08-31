@@ -49,8 +49,12 @@ share.playStone = (game, point_id) ->
 
   Games.update(game._id, {$set: {stones: game.stones, captures: game.captures, groups: res.groups, occupied_points: res.occupied_points, ko_points: res.ko_points, current_turn: share.otherPlayer(game.current_turn)}})
 
-
+# resign player
 share.playerResign = (game, player) ->
+  if game.state == "awaitingPlayer"
+    Games.remove({_id:game._id})
+    return false
+
   if game.state != "active"
     return false
 

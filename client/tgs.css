@@ -33,3 +33,18 @@ a{text-decoration:none}
     height: 100%;
     overflow: hidden;
 }
+
+#title{
+    position:relative;
+}
+
+#userMenu{
+    display:none;
+    position:absolute;
+    top:34px;
+    right:13px;
+    width:50px;
+    padding:5px;
+    border:solid 1px black;
+    background-color:white;
+}

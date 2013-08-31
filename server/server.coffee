@@ -4,7 +4,7 @@ Connections = new Meteor.Collection("connections")
 
 Meteor.startup () ->
   Connections.remove({})
-  #share.Games.remove({})
+  share.Games.remove({})
 
   # load boards from server
   BoardTypes.remove({})
@@ -14,7 +14,6 @@ Meteor.startup () ->
   for board in types
     data = JSON.parse(Assets.getText(board + ".json"))
     BoardTypes.insert({name: board, data:data})
-
 
 
 # server code: heartbeat method
@@ -29,18 +28,22 @@ Meteor.methods {
 
 
 # server code: clean up dead clients after 60 seconds
-Meteor.setInterval () ->
+Meteor.setInterval((() ->
   now = (new Date()).getTime()
-  Connections.find({last_seen: {$lt: (now - 60 * 1000)}}).fetch().forEach (con) ->
-    console.log "missing user"
-    if con.game_id
-      console.log con.game_id
-      game = share.Games.find({_id: con.game_id})
-      user = Meteor.users.find({_id: con.user_id})
-      if game && game.status != "completed"
-        if game.players.black == user._id
-          share.playerResign(game, "black")
-        else
-          share.playerResign(game, "white")
+  Connections.find({last_seen: {$lt: (now - 10 * 1000)}}).fetch().forEach (con) ->
+    game = share.Games.findOne({_id: con.game_id})
+    user = Meteor.users.findOne({_id: con.user_id})
+    console.log "missing user", game._id, user._id
+    Connections.remove({user_id:user._id})
+    if game && game.state != "completed"
+      if game.players.black == user._id
+        share.playerResign(game, "black")
+      else
+        share.playerResign(game, "white")
+      
+  ), 1000)
 
-       Connections.remove({user_id:user._id})
+
+
+
+
