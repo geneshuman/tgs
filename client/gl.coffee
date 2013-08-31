@@ -5,7 +5,7 @@ $.initScene = (game) ->
   $.HEIGHT = $.container.height()
 
   # create renderer
-  $.renderer = new THREE.WebGLRenderer()
+  $.renderer = new THREE.WebGLRenderer({'antialias':true})
   $.renderer.setSize($.WIDTH, $.HEIGHT)
   $.container.append($.renderer.domElement)
 
@@ -102,6 +102,9 @@ $.initScene = (game) ->
       edge = new THREE.Line(geometry, line_material)
       $.graph.add(edge)    
 
+  # add resize handler
+  window.addEventListener('resize', onWindowResize, false)
+
   # start
   $.updateStones()
   animate()
@@ -111,6 +114,11 @@ $.initScene = (game) ->
 $.clearScene = () ->
   $('#glContainer').empty()
 
+# resize
+onWindowResize = () ->
+  $.camera.aspect = $.container.width() / $.container.height()
+  $.renderer.setSize($.container.width(), $.container.height())
+  $.camera.updateProjectionMatrix()
 
 # rendering loop <- probably overkill
 animate = () ->
