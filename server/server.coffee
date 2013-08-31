@@ -3,7 +3,7 @@ BoardTypes = new Meteor.Collection("boardTypes")
 Connections = new Meteor.Collection("connections")
 
 Meteor.startup () ->
-  share.Games.remove({})
+  #share.Games.remove({})
 
   # load boards from server
   BoardTypes.remove({})

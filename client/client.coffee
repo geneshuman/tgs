@@ -78,22 +78,37 @@ Meteor.startup () ->
         share.playStone(game, stone.point_id, true)
 
       # game aux data
-      share.initAuxData(game)
+      share.initClientAuxData(game)
 
     # game change observers
-    $.Games.find({_id: game._id}).observeChanges {changed: (id, fields) ->
+    $.Games.find({_id: game._id}).observe {changed: (new_doc, old_doc) ->
       $.updateStones()
-
-      if "state" in fields
-        handleStateChange()
+      if old_doc.state != new_doc.state
+        handleStateChange(new_doc, old_doc)
     }
 
 
 # handle game state changes
-handleStateChange = () ->
+handleStateChange = (new_doc, old_doc) ->
   game = $.currentGame()
-  if game.state == "completed"
+  if new_doc.state == "completed"
     completeGame(game)
+  else if new_doc.state == "requestUndo"
+    console.log "requestUndo"
+    if $.isCurrentTurn()
+      if confirm("Your opponent has requested to undo their last move")        
+        $.Games.update(Session.get("current_game_id"), {$set: {state: "acceptUndo"}})
+      else
+        $.Games.update(Session.get("current_game_id"), {$set: {state: "active"}})
+  else if new_doc.state == "acceptUndo"
+    if !$.isCurrentTurn()
+      alert("Request accepted")      
+      $.Games.update(Session.get("current_game_id"), {$set: $.history.pop()})
+      $.updateStones()  # <------- why is this necessary?
+  else if new_doc.state == "active" && old_doc.state == "requestUndo"
+    if new_doc.stones.length == old_doc.stones.length
+      if !$.isCurrentTurn()
+        alert("Request denied")
 
 
 # game over logic

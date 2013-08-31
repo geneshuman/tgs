@@ -1,14 +1,11 @@
 undo = () ->
-  if !$.isCurrentTurn()
-    return
+  if !$.isCurrentTurn() && $.history.length != 0
+    $.Games.update(Session.get("current_game_id"), {$set: {state: "requestUndo"}})
 
 
 pass = () ->
-  game = $.currentGame()
-  if !$.isCurrentTurn()
-    return
-
-  share.pass(game)
+  if $.isCurrentTurn()
+    share.pass($.currentGame())
 
 
 resign = () ->

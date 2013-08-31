@@ -5,12 +5,8 @@ else
 
 
 # build aux data from scratch
-share.initAuxData = (game) ->
-  game.occupied_points = {}
-  game.ko_points = {}
-  game.groups = {}
-  for stone in game.stones
-    share.updateAuxData(game, stone.point_id)
+share.initClientAuxData = (game) ->
+  $.history = []
 
 
 # update aux data for a specific point
@@ -94,7 +90,8 @@ share.updateAuxData = (game, point_id) ->
     id: Random.id(),
     player: game.current_turn,    
     members: members,
-    liberties: liberties
+    liberties: liberties,
+    marked_dead: false
   }
   game.groups[group.id] = group
 

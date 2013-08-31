@@ -25,7 +25,13 @@ share.playStone = (game, point_id) ->
 
   # move was suicide
   if not res
-    return false  
+    return false
+
+  # record to history
+  if typeof $ != 'undefined'
+    obj = $.extend(true, {}, Games.find({_id: game._id}).fetch()[0])
+    delete obj._id
+    $.history.push(obj)    
   
   # add stone
   stone = {
@@ -42,11 +48,6 @@ share.playStone = (game, point_id) ->
       stone.captured = true
 
   Games.update(game._id, {$set: {stones: game.stones, captures: game.captures, groups: res.groups, occupied_points: res.occupied_points, ko_points: res.ko_points, current_turn: share.otherPlayer(game.current_turn)}})
-
-
-share.clickStone = (game, point_id) ->
-  # depending on game status, do something
-  return false
 
 
 share.playerResign = (game, player) ->
@@ -71,18 +72,7 @@ share.pass = (game) ->
     Games.update(game._id, {$set: {state: "pass", current_turn:share.otherPlayer(game.current_turn)}})
 
 
-share.undoLastMove = (game) ->
+
+share.clickStone = (game, point_id) ->
+  # depending on game status, do something
   return false
-
-
-# out dated
-share.captureStone = (game, point_id) ->
-  stone = [stone for stone in game.stones when stone.point_id == point_id and not stone.captured][0][0]
-  stone.point_id = null
-  stone.captured = true
-
-  captures = game.captures  
-  captures[share.otherPlayer(stone.player)] += 1
-
-  Games.update(game._id, {$set: {stones: game.stones, captures: captures}})
-

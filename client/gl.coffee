@@ -103,6 +103,7 @@ $.initScene = (game) ->
       $.graph.add(edge)    
 
   # start
+  $.updateStones()
   animate()
 
 
