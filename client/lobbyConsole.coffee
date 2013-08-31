@@ -1,9 +1,9 @@
 # all games a user(logged in or not) can see
 availableGames = () ->
   if Meteor.user()
-    $.Games.find().fetch()
+    $.Games.find({state: {$ne: "completed"}}).fetch()
   else
-    _.filter $.Games.find().fetch(), (game) ->
+    _.filter $.Games.find({state: {$ne: "completed"}}).fetch(), (game) ->
       game.players.white && game.players.black
 
 

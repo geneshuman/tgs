@@ -3,6 +3,7 @@ BoardTypes = new Meteor.Collection("boardTypes")
 Connections = new Meteor.Collection("connections")
 
 Meteor.startup () ->
+  Connections.remove({})
   #share.Games.remove({})
 
   # load boards from server
@@ -18,18 +19,28 @@ Meteor.startup () ->
 
 # server code: heartbeat method
 Meteor.methods {
-  keepalive: (user_id) ->
-    if (!Connections.findOne(user_id))
-      Connections.insert({user_id: user_id})
+  keepalive: (user_id, game_id) ->
+    console.log "keepalive", user_id, game_id
+    if !Connections.find({user_id: user_id, game_id: game_id}).fetch()[0]
+      Connections.insert({user_id: user_id, game_id: game_id})
 
-    Connections.update(user_id, {$set: {last_seen: (new Date()).getTime()}})  
+    Connections.update({user_id: user_id}, {$set: {last_seen: (new Date()).getTime()}})  
 }
 
 
 # server code: clean up dead clients after 60 seconds
-#Meteor.setInterval () ->
-#  now = (new Date()).getTime()
-#  Connections.find({last_seen: {$lt: (now - 60 * 1000)}}).forEach (user) ->
-#    5+0
+Meteor.setInterval () ->
+  now = (new Date()).getTime()
+  Connections.find({last_seen: {$lt: (now - 60 * 1000)}}).fetch().forEach (con) ->
+    console.log "missing user"
+    if con.game_id
+      console.log con.game_id
+      game = share.Games.find({_id: con.game_id})
+      user = Meteor.users.find({_id: con.user_id})
+      if game && game.status != "completed"
+        if game.players.black == user._id
+          share.playerResign(game, "black")
+        else
+          share.playerResign(game, "white")
 
-    # // do something here for each idle user
+       Connections.remove({user_id:user._id})
