@@ -45,15 +45,17 @@ $.observingGame = () ->
 
 
 # top level interaction
-Template.console.username = () ->  
-  Meteor.user().username
-
-
-Template.console.currentGame = () ->
-  $.currentGame()
+Template.console.helpers {
+  username: () ->
+    Meteor.user().username
+  currentGame: () ->
+    $.currentGame()
+}
 
 
 Template.console.events {
+  'click #titleDropDown': (event) ->
+    event.preventDefault()
   'click .logout': () ->
     if $.currentGame()
       share.playerResign($.currentGame(), $.userColor())
