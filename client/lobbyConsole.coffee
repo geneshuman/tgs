@@ -44,6 +44,7 @@ newGame = () ->
 
 # join an existing game
 joinGame = (event) ->
+  event.preventDefault()
   id = event.currentTarget.id
   game = $.Games.find({_id: id}).fetch()[0]
   players = game.players
@@ -57,6 +58,7 @@ joinGame = (event) ->
 
 # observe an existing game
 observeGame = (event) ->
+  event.preventDefault()
   id = event.currentTarget.id
   game = $.Games.find({_id: id}).fetch()[0]
   Session.set("current_game_id", game._id)
@@ -64,18 +66,15 @@ observeGame = (event) ->
 
   
 # Templates
-Template.lobbyConsole.availableGames = () ->
-  availableGames()
-
-Template.lobbyConsole.username = () ->  
-  Meteor.user().username
-
-Template.lobbyConsole.boardTypes = () ->
-  $.BoardTypes.find({}, {sort: {name:1}})
-
 Template.lobbyConsole.helpers {
   anyGames: () ->
     availableGames().length != 0
+  availableGames: () ->
+    availableGames()
+  username: () ->
+    Meteor.user().username
+  boardTypes: () ->
+    $.BoardTypes.find({}, {sort: {name:1}})
 }
 
 Template.gameSummary.helpers {

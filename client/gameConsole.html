@@ -2,7 +2,7 @@
   <div id="gameConsole">
     <div id="players">
       <table><tr>
-	  <td id="black" {{#if currentTurnIs "black"}}class="currentTurn"{{/if}}>
+	  <td id="black" class="{{#if currentTurnIs "black"}}currentTurn{{/if}}">
 	    <img class="playerStone" src="stone_black.png">
 	    <span class="playerName">
 	      {{blackName}}
@@ -13,7 +13,7 @@
 	      {{numBlackCaptures}}&nbsp; prisoners
 	    </span>
 	  </td>
-	  <td id="white" {{#if currentTurnIs "white"}}class="currentTurn"{{/if}}>
+	  <td id="white" class="{{#if currentTurnIs "white"}}currentTurn{{/if}}">
 	    <img class="playerStone" src="stone_white.png">
 	    <span class="playerName">
 	      {{whiteName}}

@@ -22,11 +22,11 @@
   <div id="console">
     <div id="title">
       {{#unless currentUser}}
-      {{loginButtons align="right"}}
+      {{> loginButtons align="right"}}
       {{else}}
-      <a id="titleDropDown" href="javascript:void(0)" onmouseover="$('#userMenu').show()" onmouseout="$('#userMenu').hide()">{{username}}&nbsp;▾
+      <a id="titleDropDown" href="#" onmouseover="$('#userMenu').show()" onmouseout="$('#userMenu').hide()">{{username}}&nbsp;▾
       <div id="userMenu" onmouseover="$('#userMenu').show()" onmouseout="$('#userMenu').hide()">
-	<a class="logout" href="javascript:void(0)">logout</a>
+	<a class="logout" href="#">logout</a>
       </div>
       </a>
       {{/unless}}
@@ -42,8 +42,6 @@
 </template>
 
 <template name="game">
-  {{#constant}}
   <div id="glContainer"></div>
-  {{/constant}}
 </template>
 
