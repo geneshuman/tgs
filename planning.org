@@ -1,0 +1,181 @@
+* Tier 1 - feature parity with existing servers (igs, kgs)
+** dev google group
+
+** branding
+*** logo
+*** name
+*** outreach
+*** domain name
+
+** logged out page not shitty
+*** better login widget
+*** better presentation, maybe current news, public game info?
+*** view active or historical games
+
+** better lobby (bamboo joint?)
+*** list active games
+**** your games
+*** list users
+*** start a new game improvements
+**** management of board shapes
+**** time limits
+**** handicap
+**** rule set
+**** new open game or challenge user
+
+** better user support
+*** user profile/state management
+**** personal info?
+**** challeges enabling
+*** ranking system
+*** game history
+
+** bug report
+
+** correspondence go support
+*** infinite game time
+*** email notifications
+
+** links to games
+*** maybe even to moves
+
+
+** better game interface
+*** describe controls
+*** sounds
+*** disconnection support
+
+*** meta tab
+**** general graphical overhaul
+***** tri segmented
+****** top - user name / time / prisoners
+****** middle - chat log / game info
+****** bottom(or maybe middle) - controls
+
+*** game tab
+**** 2d support, complete feature parity
+***** background image + board
+***** non-spherical stones/shading/lighting
+***** fixed/free perpective options
+
+**** major 3d game support optimizations
+***** display
+***** controls
+****** alternative rotation command
+
+** handicap support
+*** board format support
+
+** komi
+*** function of board size, editiable on game creation
+
+** mobile support
+*** tablets
+*** phones
+
+** at least one weird ruleset
+*** one invisible move?
+*** pair go?
+
+** fix all bugs!
+
+** have baisc understand of monetization routes
+*** lessons
+*** problems
+*** tournaments
+
+** have basic understand of performance limitations
+*** ~10k simultaneous games/users
+
+** make sure code architecture is correct for future development
+
+
+
+
+
+* Tier 2 - things to do once we have users
+** developer community
+
+** rooms
+
+** game review
+
+** internationalization
+
+** improve komi
+
+** better keyboard interaction
+
+** local games
+
+** new board support
+*** upload own format
+*** board editor
+
+** 2d presentation of unusual boards(torus, etc..)
+
+** complete optimization of 3d game playing
+
+** detailed investigation into alternate rule sets
+*** multiplayer go
+
+** hosted AI
+*** offline support
+
+** teaching/review interface
+
+** code/unit tests
+
+* Tier 3 - awesome non critical features
+
+** handicap point cusomization
+
+** komi machine learning
+
+** chinese vs japanese scoring
+
+** sgf support
+*** 3d boards?????
+
+** interactive community wiki of go study topics & history
+
+** historical game browser
+*** famous games
+*** and games on server
+
+** go problem support
+
+** joseki/fuseki dictionaries
+*** joseki & fuseki for novel boards
+
+** AI api
+
+** data export tools
+*** api
+
+** heatmaps
+*** conditional
+
+** ai battles
+
+** mathmatically solved board refernce/interace
+
+** projecting 3d boards to 2d?
+
+
+* Tier 37
+
+** masses vs masses
+
+** eigengo
+
+** p-adic go
+
+** continuous go on a plane
+
+** arbitrary topological spaces stated abstractly
+
+
+* Tier 38
+
+** machine learning generated joseki and fuseki dictionaries for alternative boards
