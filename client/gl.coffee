@@ -140,6 +140,8 @@ getSphere = (size, x, y, z, material) ->
 
 # check for mouse clicks on stones
 onDocumentMouseDown = (event) ->
+  if event.which != 1
+    return
   event.preventDefault();
 
   game = $.currentGame()
@@ -150,11 +152,16 @@ onDocumentMouseDown = (event) ->
   raycaster = new THREE.Raycaster( $.camera.position, vector.sub( $.camera.position ).normalize() )
 
   # intersect for clicking on groups
-  intersects = raycaster.intersectObjects(_.union($.stone_spheres, $.marker_spheres))
+  block_intersects = raycaster.intersectObjects(_.union($.stone_spheres, $.marker_spheres))
+  valid_intersects = raycaster.intersectObjects($.point_spheres)
 
-  if intersects.length > 0
-    obj = intersects[0].object
-    point_id = $.pos_to_id[[obj.position.x, obj.position.y, obj.position.z]]
+  valid = valid_intersects[0]
+  block = block_intersects[0]
+
+  if block && (!valid || block.distance < valid.distance)
+    obj = block.object
+    pos = [obj.position.x, obj.position.y, obj.position.z]
+    point_id = $.pos_to_id[pos]
     share.clickStone(game, point_id)
     return
 
@@ -162,12 +169,11 @@ onDocumentMouseDown = (event) ->
   if not $.isCurrentTurn(Meteor.user())
     return
 
-  # intersect for stone placement
-  intersects = raycaster.intersectObjects($.point_spheres)
-
-  if intersects.length > 0
-    pos = [intersects[0].object.position.x, intersects[0].object.position.y, intersects[0].object.position.z]
-    share.playStone(game, $.pos_to_id[pos])
+  if valid
+    obj = valid.object
+    pos = [obj.position.x, obj.position.y, obj.position.z]
+    point_id = $.pos_to_id[pos]
+    share.playStone(game, point_id)
 
 
 # add a stone
@@ -223,4 +229,3 @@ $.updateStones = () ->
     for point_id in group.members
       pos = game.board.points[point_id].pos
       addStone("marker", 1.2 * game.board.stone_radius, pos[0], pos[1], pos[2])
-    
