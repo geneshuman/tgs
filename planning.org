@@ -1,12 +1,6 @@
 * Tier 1 - feature parity with existing servers (igs, kgs)
 ** dev google group
 
-** branding
-*** logo
-*** name
-*** outreach
-*** domain name
-
 ** logged out page not shitty
 *** better login widget
 *** better presentation, maybe current news, public game info?
@@ -29,16 +23,6 @@
 **** challeges enabling
 *** ranking system
 *** game history
-
-** bug report
-
-** correspondence go support
-*** infinite game time
-*** email notifications
-
-** links to games
-*** maybe even to moves
-
 
 ** better game interface
 *** describe controls
@@ -63,21 +47,35 @@
 ***** controls
 ****** alternative rotation command
 
+
 ** handicap support
 *** board format support
 
 ** komi
 *** function of board size, editiable on game creation
 
+** correspondence go support
+*** infinite game time
+*** email notifications
+
+
+** make sure code architecture is correct for future development
+*** internationlization
+
+
+
+** fix all bugs!
+
 ** mobile support
-*** tablets
-*** phones
+*** mobile web
+**** optimizing 3d engine
+
+*** ui modifications
 
 ** at least one weird ruleset
 *** one invisible move?
 *** pair go?
 
-** fix all bugs!
 
 ** have baisc understand of monetization routes
 *** lessons
@@ -87,10 +85,16 @@
 ** have basic understand of performance limitations
 *** ~10k simultaneous games/users
 
-** make sure code architecture is correct for future development
+** bug report
 
+** links to games
+*** maybe even to moves
 
-
+** branding
+*** logo
+*** name
+*** outreach
+*** domain name
 
 
 * Tier 2 - things to do once we have users
@@ -98,10 +102,7 @@
 
 ** rooms
 
-** game review
-
 ** internationalization
-
 ** improve komi
 
 ** better keyboard interaction
@@ -112,21 +113,23 @@
 *** upload own format
 *** board editor
 
-** 2d presentation of unusual boards(torus, etc..)
-
 ** complete optimization of 3d game playing
 
 ** detailed investigation into alternate rule sets
 *** multiplayer go
 
+** teaching/review interface
+** code/unit tests
+
 ** hosted AI
 *** offline support
 
-** teaching/review interface
+** wrap html/js into native mobile apps
 
-** code/unit tests
 
 * Tier 3 - awesome non critical features
+
+** 2d presentation of unusual boards(torus, etc..)
 
 ** handicap point cusomization
 
@@ -158,7 +161,7 @@
 
 ** ai battles
 
-** mathmatically solved board refernce/interace
+** mathmatically solved board refernce/interface
 
 ** projecting 3d boards to 2d?
 
