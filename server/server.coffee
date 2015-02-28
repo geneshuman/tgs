@@ -10,7 +10,7 @@ Meteor.startup () ->
   # load boards from server
   BoardTypes.remove({})
   #types = ["2x2x2", "3x3x3", "4x4x4", "5x5x5"]#, "2x2x5", "2x2x7", "2x3x7"]
-  types = ["4x4x4s1","5x5x5s1","6x6x6s1","7x7x7s1","5x5x5s2","6x6x6s2","7x7x7s2","7x7x7s3","3x3x3","4x4x4","5x5x5","6x6x6","7x7x7","5x2x2","6x2x2","7x2x2","5x2x3","6x2x3","7x2x3","5x2x4","7x2x4","5x2x5","7x2x7","9x2x9","5x3x3","7x3x3","9x3x3","7x3x5","5x3x5","7x3x7","9x3x9"]
+  types = ["4x4x4s1","5x5x5s1","6x6x6s1","7x7x7s1","5x5x5s2","6x6x6s2","7x7x7s2","7x7x7s3","9x9x1","3x3x3","4x4x4","5x5x5","6x6x6","7x7x7","5x2x2","6x2x2","7x2x2","5x2x3","6x2x3","7x2x3","5x2x4","7x2x4","5x2x5","7x2x7","9x2x9","5x3x3","7x3x3","9x3x3","7x3x5","5x3x5","7x3x7","9x3x9"]
 
   for board in types
     data = JSON.parse(Assets.getText(board + ".json"))
