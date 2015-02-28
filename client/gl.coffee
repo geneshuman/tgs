@@ -140,6 +140,8 @@ getSphere = (size, x, y, z, material) ->
 
 # check for mouse clicks on stones
 onDocumentMouseDown = (event) ->
+  if event.which != 1
+    return
   event.preventDefault();
 
   game = $.currentGame()
